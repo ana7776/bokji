@@ -11,7 +11,7 @@ const { item } = Astro.props;
 
 <article class="check-card">
   <a href={itemPath(item)}>
-    <span>{item.categoryLabel} · {item.subCategoryLabel}</span>
+    <span>{item.categoryLabel} / {item.subCategoryLabel}</span>
     <strong>{item.title}</strong>
     <p>{item.description}</p>
   </a>
@@ -19,27 +19,38 @@ const { item } = Astro.props;
 
 <style>
   .check-card {
-    border: 1px solid #d9e1ec;
+    border: 1px solid #d8e2eb;
     border-radius: 8px;
     background: #ffffff;
+    transition:
+      border-color 160ms ease,
+      transform 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .check-card:hover {
+    border-color: #93b8c2;
+    box-shadow: 0 14px 34px rgba(30, 51, 76, 0.08);
+    transform: translateY(-2px);
   }
 
   .check-card a {
     display: grid;
     gap: 0.55rem;
-    min-height: 180px;
+    min-height: 188px;
     padding: 1.1rem;
     color: inherit;
     text-decoration: none;
   }
 
   .check-card span {
-    color: #2f6f63;
+    color: #0f5f74;
     font-size: 0.84rem;
     font-weight: 700;
   }
 
   .check-card strong {
+    color: #172033;
     font-size: 1.08rem;
     line-height: 1.35;
   }

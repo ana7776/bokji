@@ -31,7 +31,10 @@ const canonical = absoluteUrl(Astro.props.canonicalPath ?? Astro.url.pathname);
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="/">{siteConfig.name}</a>
+      <a class="brand" href="/">
+        <span class="brand-mark">B</span>
+        <span>{siteConfig.name}</span>
+      </a>
       <nav aria-label="주요 메뉴">
         {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
       </nav>
@@ -40,15 +43,17 @@ const canonical = absoluteUrl(Astro.props.canonicalPath ?? Astro.url.pathname);
       <slot />
     </main>
     <footer class="site-footer">
-      <p>복지체크는 신청 전 참고용 계산 정보를 제공합니다. 실제 자격과 금액은 각 기관의 공식 기준을 확인하세요.</p>
+      <p>
+        복지체크는 신청 전 참고용 계산 정보를 제공합니다. 실제 자격, 금액, 접수 가능 여부는 각 기관의 최신 공고와 공식 기준으로 확인하세요.
+      </p>
     </footer>
   </body>
 </html>
 
 <style is:global>
   :root {
-    color: #172033;
-    background: #f4f7f5;
+    color: #152033;
+    background: #f6f8fb;
     font-family:
       Pretendard, "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont,
       "Segoe UI", sans-serif;
@@ -62,28 +67,48 @@ const canonical = absoluteUrl(Astro.props.canonicalPath ?? Astro.url.pathname);
   body {
     margin: 0;
     background:
-      linear-gradient(180deg, #eef5f1 0, #f9faf7 360px),
-      #f9faf7;
+      radial-gradient(circle at 12% 0%, rgba(21, 94, 82, 0.14), transparent 32rem),
+      linear-gradient(180deg, #f7fbff 0, #f8faf7 32rem),
+      #f8faf7;
   }
 
   a {
-    color: #155e52;
+    color: #0f5f74;
   }
 
   .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(204, 216, 226, 0.82);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.85rem max(1.25rem, calc((100vw - 1180px) / 2));
+    backdrop-filter: blur(12px);
   }
 
   .brand {
-    color: #16352f;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: #16213a;
     font-size: 1.25rem;
     font-weight: 900;
     text-decoration: none;
+  }
+
+  .brand-mark {
+    display: inline-grid;
+    width: 2rem;
+    height: 2rem;
+    place-items: center;
+    border-radius: 8px;
+    background: #0f5f74;
+    color: #ffffff;
+    font-size: 1rem;
+    line-height: 1;
   }
 
   nav {
@@ -93,16 +118,20 @@ const canonical = absoluteUrl(Astro.props.canonicalPath ?? Astro.url.pathname);
   }
 
   nav a {
-    color: #314236;
+    color: #314055;
     font-size: 0.94rem;
     font-weight: 700;
     text-decoration: none;
   }
 
+  nav a:hover {
+    color: #0f5f74;
+  }
+
   main {
-    max-width: 1120px;
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 1.5rem 1.25rem 4rem;
+    padding: 1.75rem 1.25rem 4.5rem;
   }
 
   h1 {
@@ -125,7 +154,7 @@ const canonical = absoluteUrl(Astro.props.canonicalPath ?? Astro.url.pathname);
 
   .lead {
     max-width: 760px;
-    color: #4b5d55;
+    color: #4f6075;
     font-size: 1.08rem;
     line-height: 1.75;
   }
@@ -168,9 +197,9 @@ const canonical = absoluteUrl(Astro.props.canonicalPath ?? Astro.url.pathname);
   }
 
   .site-footer {
-    border-top: 1px solid #dce4dc;
+    border-top: 1px solid #dde5ee;
     background: #ffffff;
-    color: #617064;
+    color: #647184;
   }
 
   .site-footer p {
@@ -185,6 +214,7 @@ const canonical = absoluteUrl(Astro.props.canonicalPath ?? Astro.url.pathname);
       align-items: flex-start;
       flex-direction: column;
       gap: 0.75rem;
+      position: static;
     }
   }
 </style>

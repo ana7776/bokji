@@ -14,7 +14,7 @@ const { post } = Astro.props;
     <span>{post.data.category}</span>
     <strong>{post.data.title}</strong>
     <p>{post.data.description}</p>
-    <time datetime={post.data.updatedAt}>업데이트 {post.data.updatedAt}</time>
+    <time datetime={post.data.updatedAt}>최종 업데이트 {post.data.updatedAt}</time>
   </a>
 </article>
 
@@ -32,12 +32,13 @@ const { post } = Astro.props;
   }
 
   .post-card span {
-    color: #7b4d17;
+    color: #c0572a;
     font-size: 0.82rem;
     font-weight: 700;
   }
 
   .post-card strong {
+    color: #172033;
     font-size: 1.06rem;
   }
 

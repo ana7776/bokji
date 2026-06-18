@@ -8,21 +8,42 @@ const categories = uniqueCategories();
 
 <BaseLayout
   title="복지 체크도구 전체 목록 | 복지체크"
-  description="소득, 재산, 주거비, 생활비를 기준으로 복지 신청 전 확인할 수 있는 2026년 계산기 전체 목록입니다."
+  description="소득, 재산, 주거비, 생활비 기준으로 복지 신청 전 확인할 수 있는 2026년 계산기와 체크도구 전체 목록입니다."
   canonicalPath="/check/"
 >
-  <h1>복지 체크도구 전체 목록</h1>
-  <p class="lead">소득기준, 재산기준, 주거비, 생활비를 빠르게 확인할 수 있는 계산기와 변환 도구입니다.</p>
+  <section class="page-hero">
+    <p class="eyebrow">calculator directory</p>
+    <h1>복지 신청 전 확인할 계산기를 한곳에 모았습니다</h1>
+    <p class="lead">
+      월 소득, 세금, 금융재산, 대출이자, 주거비처럼 신청 전에 자주 막히는 기준을 항목별로 빠르게 확인하세요.
+    </p>
+  </section>
 
   <section class="section">
-    <h2>카테고리</h2>
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">category</p>
+        <h2>카테고리로 찾기</h2>
+      </div>
+    </div>
     <div class="chips">
-      {categories.map((category) => <a href={`/check/${category.category}/`}>{category.label} {category.count}</a>)}
+      {categories.map((category) => (
+        <a href={`/check/${category.category}/`}>
+          <strong>{category.label}</strong>
+          <span>{category.count}개</span>
+        </a>
+      ))}
     </div>
   </section>
 
   <section class="section">
-    <h2>전체 도구</h2>
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">all tools</p>
+        <h2>전체 체크도구</h2>
+      </div>
+      <span>{checkItems.length}개</span>
+    </div>
     <div class="grid">
       {checkItems.map((item) => <CheckCard item={item} />)}
     </div>
@@ -30,19 +51,63 @@ const categories = uniqueCategories();
 </BaseLayout>
 
 <style>
-  .chips {
+  .page-hero {
+    display: grid;
+    gap: 0.9rem;
+    border: 1px solid #d8e2eb;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 2rem;
+  }
+
+  .eyebrow {
+    margin: 0;
+    color: #c0572a;
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .section-head {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-head h2 {
+    margin: 0;
+  }
+
+  .section-head span {
+    color: #647184;
+    font-weight: 900;
+  }
+
+  .chips {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 0.7rem;
   }
 
   .chips a {
-    border: 1px solid #cad8d1;
-    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+    border: 1px solid #cad8e4;
+    border-radius: 8px;
     background: #ffffff;
-    padding: 0.55rem 0.85rem;
-    color: #1d5048;
-    font-weight: 800;
+    padding: 0.85rem 1rem;
+    color: #172033;
+    font-weight: 900;
     text-decoration: none;
+  }
+
+  .chips span {
+    color: #0f5f74;
+    font-size: 0.9rem;
   }
 </style>

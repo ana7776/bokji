@@ -5,7 +5,7 @@ export const siteConfig = {
   defaultDescription:
     "2026년 복지제도 신청 전 소득, 급여, 세금, 주거비, 생활비를 미리 점검하는 계산기와 정보성 칼럼을 제공합니다.",
   locale: "ko_KR",
-  homeMode: "review" as "review" | "directory",
+  homeMode: "directory" as "review" | "directory",
   dataRoot: "check",
   adsenseClientId: "ca-pub-0000000000000000",
 };
