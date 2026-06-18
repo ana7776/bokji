@@ -1,0 +1,190 @@
+---
+import { navItems, siteConfig } from "@/config/site";
+import { absoluteUrl } from "@/lib/items";
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+}
+
+const title = Astro.props.title ?? siteConfig.defaultTitle;
+const description = Astro.props.description ?? siteConfig.defaultDescription;
+const canonical = absoluteUrl(Astro.props.canonicalPath ?? Astro.url.pathname);
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={siteConfig.locale} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/">{siteConfig.name}</a>
+      <nav aria-label="주요 메뉴">
+        {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>복지체크는 신청 전 참고용 계산 정보를 제공합니다. 실제 자격과 금액은 각 기관의 공식 기준을 확인하세요.</p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    color: #172033;
+    background: #f4f7f5;
+    font-family:
+      Pretendard, "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+    line-height: 1.5;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background:
+      linear-gradient(180deg, #eef5f1 0, #f9faf7 360px),
+      #f9faf7;
+  }
+
+  a {
+    color: #155e52;
+  }
+
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 1rem 1.25rem;
+  }
+
+  .brand {
+    color: #16352f;
+    font-size: 1.25rem;
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  nav {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    color: #314236;
+    font-size: 0.94rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  main {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 4rem;
+  }
+
+  h1 {
+    margin: 0;
+    max-width: 780px;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1.15;
+    letter-spacing: 0;
+  }
+
+  h2 {
+    margin: 0 0 1rem;
+    font-size: 1.55rem;
+    letter-spacing: 0;
+  }
+
+  p {
+    word-break: keep-all;
+  }
+
+  .lead {
+    max-width: 760px;
+    color: #4b5d55;
+    font-size: 1.08rem;
+    line-height: 1.75;
+  }
+
+  .section {
+    margin-top: 3rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .content {
+    display: grid;
+    gap: 1.1rem;
+    max-width: 780px;
+    color: #29374a;
+    font-size: 1.02rem;
+    line-height: 1.85;
+  }
+
+  .content h2 {
+    margin-top: 2rem;
+  }
+
+  .content table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+  }
+
+  .content th,
+  .content td {
+    border: 1px solid #dce3eb;
+    padding: 0.8rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .site-footer {
+    border-top: 1px solid #dce4dc;
+    background: #ffffff;
+    color: #617064;
+  }
+
+  .site-footer p {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 720px) {
+    .site-header {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+  }
+</style>

@@ -1,0 +1,27 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PostCard from "@/components/PostCard.astro";
+
+const posts = (await getCollection("info")).sort(
+  (a, b) => Date.parse(b.data.updatedAt) - Date.parse(a.data.updatedAt),
+);
+---
+
+<BaseLayout
+  title="복지 가이드 전체 목록 | 복지체크"
+  description="복지 신청 전 소득, 재산, 주거, 생활비 기준을 이해하기 위한 정보성 칼럼 전체 목록입니다."
+  canonicalPath="/info/"
+>
+  <h1>복지 가이드 전체 목록</h1>
+  <p class="lead">신청 자격을 판단하기 전에 알아두면 좋은 기준과 준비사항을 정리했습니다.</p>
+  <section class="section post-list">
+    {posts.map((post) => <PostCard post={post} />)}
+  </section>
+</BaseLayout>
+
+<style>
+  .post-list {
+    border-top: 1px solid #dfe6ef;
+  }
+</style>

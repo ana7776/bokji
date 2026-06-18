@@ -1,0 +1,48 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import CheckCard from "@/components/CheckCard.astro";
+import { checkItems, uniqueCategories } from "@/lib/items";
+
+const categories = uniqueCategories();
+---
+
+<BaseLayout
+  title="복지 체크도구 전체 목록 | 복지체크"
+  description="소득, 재산, 주거비, 생활비를 기준으로 복지 신청 전 확인할 수 있는 2026년 계산기 전체 목록입니다."
+  canonicalPath="/check/"
+>
+  <h1>복지 체크도구 전체 목록</h1>
+  <p class="lead">소득기준, 재산기준, 주거비, 생활비를 빠르게 확인할 수 있는 계산기와 변환 도구입니다.</p>
+
+  <section class="section">
+    <h2>카테고리</h2>
+    <div class="chips">
+      {categories.map((category) => <a href={`/check/${category.category}/`}>{category.label} {category.count}</a>)}
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>전체 도구</h2>
+    <div class="grid">
+      {checkItems.map((item) => <CheckCard item={item} />)}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .chips a {
+    border: 1px solid #cad8d1;
+    border-radius: 999px;
+    background: #ffffff;
+    padding: 0.55rem 0.85rem;
+    color: #1d5048;
+    font-weight: 800;
+    text-decoration: none;
+  }
+</style>

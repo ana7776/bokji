@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+build-output.log
+astro-dev.log
+*.log
+
+.env
+.env.*
+!.env.example

@@ -1,0 +1,137 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import CheckCard from "@/components/CheckCard.astro";
+import PostCard from "@/components/PostCard.astro";
+import { siteConfig } from "@/config/site";
+import { checkItems, uniqueCategories } from "@/lib/items";
+
+const posts = (await getCollection("info")).sort(
+  (a, b) => Date.parse(b.data.updatedAt) - Date.parse(a.data.updatedAt),
+);
+const categories = uniqueCategories();
+---
+
+<BaseLayout>
+  <section class="hero">
+    <p class="eyebrow">bokjicheck.co.kr</p>
+    <h1>2026 복지 자격을 신청 전 미리 점검하세요</h1>
+    <p class="lead">
+      복지체크는 소득, 재산, 주거비, 생활비를 계산해 정부·지자체 복지제도 신청 전에 확인해야 할 기준을 정리합니다.
+    </p>
+    <form class="search" action="/check/" method="get">
+      <label for="q">복지 체크도구 검색</label>
+      <div>
+        <input id="q" name="q" type="search" placeholder="예: 월급 실수령액, 전세대출, 전기요금" />
+        <button type="submit">검색</button>
+      </div>
+    </form>
+  </section>
+
+  {
+    siteConfig.homeMode === "review" ? (
+      <section class="section">
+        <h2>복지 신청 전 읽어볼 가이드</h2>
+        <div class="post-list">
+          {posts.slice(0, 24).map((post) => <PostCard post={post} />)}
+        </div>
+      </section>
+    ) : (
+      <>
+        <section class="section">
+          <h2>복지 체크 카테고리</h2>
+          <div class="category-grid">
+            {categories.map((category) => (
+              <a href={`/check/${category.category}/`}>
+                <strong>{category.label}</strong>
+                <span>{category.count}개 도구</span>
+              </a>
+            ))}
+          </div>
+        </section>
+        <section class="section">
+          <h2>인기 체크도구</h2>
+          <div class="grid">
+            {checkItems.slice(0, 8).map((item) => <CheckCard item={item} />)}
+          </div>
+        </section>
+      </>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .hero {
+    display: grid;
+    gap: 1rem;
+    padding: 3rem 0 1rem;
+  }
+
+  .eyebrow {
+    margin: 0;
+    color: #2f6f63;
+    font-weight: 900;
+  }
+
+  .search {
+    display: grid;
+    gap: 0.5rem;
+    max-width: 720px;
+    margin-top: 1rem;
+  }
+
+  .search label {
+    font-weight: 800;
+  }
+
+  .search div {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .search input {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid #cdd8d2;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    font: inherit;
+  }
+
+  .search button {
+    border: 0;
+    border-radius: 8px;
+    background: #155e52;
+    color: #ffffff;
+    padding: 0 1.2rem;
+    font: inherit;
+    font-weight: 800;
+  }
+
+  .post-list {
+    display: grid;
+    border-top: 1px solid #dfe6ef;
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.8rem;
+  }
+
+  .category-grid a {
+    display: grid;
+    gap: 0.25rem;
+    border: 1px solid #d9e1ec;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 1rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .category-grid span {
+    color: #607080;
+    font-size: 0.9rem;
+  }
+</style>

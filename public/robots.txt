@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bokjicheck.co.kr/sitemap-index.xml

@@ -1,0 +1,388 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import AdSenseSlot from "@/components/AdSenseSlot.astro";
+import CheckCard from "@/components/CheckCard.astro";
+import PostCard from "@/components/PostCard.astro";
+import { checkItems, itemPath, relatedItems } from "@/lib/items";
+import { relatedPostsForTags } from "@/lib/info";
+
+export function getStaticPaths() {
+  return checkItems.map((item) => ({
+    params: {
+      category: item.category,
+      subCategory: item.subCategory,
+      id: item.id,
+    },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+const posts = await getCollection("info");
+const relatedPosts = relatedPostsForTags(posts, item.relatedTags, 4);
+const moreItems = relatedItems(item, 4);
+const retirementHubIds = [
+  "annual-leave-pay",
+  "unemployment-benefit",
+  "monthly-salary-net-pay",
+  "social-insurance",
+  "annual-salary-net-pay",
+  "loan-interest",
+];
+const retirementHubItems = retirementHubIds
+  .map((id) => checkItems.find((candidate) => candidate.id === id))
+  .filter((candidate): candidate is NonNullable<typeof candidate> => Boolean(candidate));
+const officialRetirementCalculator = item.sourceReferences?.find((source) =>
+  source.url.includes("moel.go.kr/retirementpayCal.do"),
+);
+const salaryHubIds = [
+  "monthly-salary-net-pay",
+  "social-insurance",
+  "severance-pay",
+  "annual-leave-pay",
+  "loan-interest",
+  "work-incentive-income-check",
+];
+const salaryHubItems = salaryHubIds
+  .map((id) => checkItems.find((candidate) => candidate.id === id))
+  .filter((candidate): candidate is NonNullable<typeof candidate> => Boolean(candidate));
+---
+
+<BaseLayout title={`${item.title} | 복지체크`} description={item.description} canonicalPath={itemPath(item)}>
+  <article class="detail">
+    <p class="eyebrow">{item.categoryLabel} · {item.subCategoryLabel}</p>
+    <h1>{item.title}</h1>
+    <p class="lead">{item.description}</p>
+
+    <AdSenseSlot slot="check-top" label="상단 광고" />
+
+    {
+      item.id === "severance-pay" && officialRetirementCalculator && (
+        <section class="section retirement-hub" aria-labelledby="retirement-hub-title">
+          <div>
+            <p class="hub-kicker">공식 계산기를 먼저 확인하세요</p>
+            <h2 id="retirement-hub-title">고용노동부 퇴직금 계산기를 기준으로 퇴직 전 정산을 점검하세요</h2>
+            <p>
+              입사일자, 퇴직일자, 미산입기간, 근무제외기간, 퇴직 전 3개월 임금, 연간상여금,
+              연차수당을 넣어 공식 계산 흐름을 확인한 뒤 아래 관련 계산기로 생활자금 공백을 함께 점검할 수 있습니다.
+            </p>
+          </div>
+          <a class="official-link" href={officialRetirementCalculator.url} target="_blank" rel="nofollow noopener">
+            고용노동부 퇴직금 계산기 열기
+          </a>
+        </section>
+      )
+    }
+
+    <section class="section content">
+      <h2>핵심 요약</h2>
+      <table>
+        <tbody>
+          {item.summary.map(([name, value]) => (
+            <tr>
+              <th scope="row">{name}</th>
+              <td>{value}</td>
+            </tr>
+          ))}
+          <tr>
+            <th scope="row">계산식</th>
+            <td>{item.formula}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    {
+      item.inputGuide && (
+        <section class="section content">
+          <h2>입력 항목 안내</h2>
+          <table>
+            <tbody>
+              {item.inputGuide.map(([name, value]) => (
+                <tr>
+                  <th scope="row">{name}</th>
+                  <td>{value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )
+    }
+
+    {
+      item.deductionGuide && (
+        <section class="section content">
+          <h2>공제 항목 기준</h2>
+          <table>
+            <tbody>
+              {item.deductionGuide.map(([name, value]) => (
+                <tr>
+                  <th scope="row">{name}</th>
+                  <td>{value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )
+    }
+
+    {
+      item.useCases && (
+        <section class="section content">
+          <h2>언제 확인하면 좋을까</h2>
+          <ul>
+            {item.useCases.map((useCase) => <li>{useCase}</li>)}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      item.calculationStandards && (
+        <section class="section content">
+          <h2>계산 전에 확인할 기준</h2>
+          <table>
+            <tbody>
+              {item.calculationStandards.map(([name, value]) => (
+                <tr>
+                  <th scope="row">{name}</th>
+                  <td>{value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )
+    }
+
+    <section class="section calculator" data-calculator={item.id}>
+      <h2>간편 계산</h2>
+      <label>
+        기준 금액
+        <input type="number" inputmode="numeric" min="0" value="3000000" data-amount />
+      </label>
+      <label>
+        비율 또는 금리(%)
+        <input type="number" inputmode="decimal" min="0" step="0.1" value="3.3" data-rate />
+      </label>
+      <output data-result>결과를 계산 중입니다.</output>
+      <p>도구별 세부 기준은 계속 보강 예정이며, 현재 계산기는 신청 전 가늠용 간편 계산으로 제공됩니다.</p>
+    </section>
+
+    {
+      item.checkNotes && (
+        <section class="section content">
+          <h2>복지 신청 전 확인할 점</h2>
+          <ul>
+            {item.checkNotes.map((note) => <li>{note}</li>)}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      item.faq && (
+        <section class="section content">
+          <h2>자주 묻는 질문</h2>
+          <div class="faq-list">
+            {item.faq.map(([question, answer]) => (
+              <details>
+                <summary>{question}</summary>
+                <p>{answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <section class="section content">
+      <h2>참고와 유의사항</h2>
+      <p>
+        복지제도는 세전소득, 세후소득, 건강보험료, 재산, 가구원 수를 서로 다르게 활용할 수 있습니다.
+        이 계산기는 신청 전 대략적인 위치를 파악하기 위한 참고용이며, 최종 자격은 관할 기관 또는 공식 신청 사이트에서 확인해야 합니다.
+      </p>
+      {
+        item.sourceReferences && (
+          <table>
+            <tbody>
+              {item.sourceReferences.map((source) => (
+                <tr>
+                  <th scope="row"><a href={source.url} rel="nofollow noopener" target="_blank">{source.label}</a></th>
+                  <td>{source.note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )
+      }
+    </section>
+
+    <AdSenseSlot slot="check-bottom" label="하단 광고" />
+  </article>
+
+  <section class="section">
+    <h2>함께 보면 좋은 정보</h2>
+    <div class="post-list">
+      {relatedPosts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>관련 체크도구</h2>
+    <div class="grid">
+      {(item.id === "severance-pay" ? retirementHubItems : item.id === "annual-salary-net-pay" ? salaryHubItems : moreItems).map((related) => <CheckCard item={related} />)}
+    </div>
+  </section>
+
+  <script>
+    const root = document.querySelector("[data-calculator]");
+    const amount = root?.querySelector("[data-amount]") as HTMLInputElement | null;
+    const rate = root?.querySelector("[data-rate]") as HTMLInputElement | null;
+    const result = root?.querySelector("[data-result]") as HTMLOutputElement | null;
+    const formatter = new Intl.NumberFormat("ko-KR");
+
+    function render() {
+      if (!amount || !rate || !result) return;
+      const amountValue = Number(amount.value || 0);
+      const rateValue = Number(rate.value || 0);
+      const calculated = Math.round(amountValue * (rateValue / 100));
+      result.value = `예상 금액: ${formatter.format(calculated)}원`;
+      result.textContent = result.value;
+    }
+
+    amount?.addEventListener("input", render);
+    rate?.addEventListener("input", render);
+    render();
+  </script>
+</BaseLayout>
+
+<style>
+  .detail {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .eyebrow {
+    margin: 0;
+    color: #2f6f63;
+    font-weight: 900;
+  }
+
+  .calculator {
+    display: grid;
+    gap: 0.8rem;
+    max-width: 560px;
+    border: 1px solid #d9e1ec;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 1.1rem;
+  }
+
+  .calculator label {
+    display: grid;
+    gap: 0.35rem;
+    font-weight: 800;
+  }
+
+  .calculator input {
+    width: 100%;
+    border: 1px solid #cdd8d2;
+    border-radius: 8px;
+    padding: 0.75rem 0.85rem;
+    font: inherit;
+  }
+
+  .calculator output {
+    border-radius: 8px;
+    background: #eaf4ef;
+    padding: 0.85rem;
+    color: #174c43;
+    font-weight: 900;
+  }
+
+  .post-list {
+    border-top: 1px solid #dfe6ef;
+  }
+
+  .faq-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .faq-list details {
+    border: 1px solid #dce3eb;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 0.95rem 1rem;
+  }
+
+  .faq-list summary {
+    cursor: pointer;
+    color: #172033;
+    font-weight: 900;
+  }
+
+  .faq-list p {
+    margin: 0.75rem 0 0;
+    color: #4b5d55;
+  }
+
+  .retirement-hub {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: center;
+    border: 1px solid #cbded8;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 1.25rem;
+  }
+
+  .retirement-hub h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.35rem;
+  }
+
+  .retirement-hub p {
+    margin: 0;
+    color: #4b5d55;
+    line-height: 1.7;
+  }
+
+  .hub-kicker {
+    margin-bottom: 0.35rem !important;
+    color: #2f6f63 !important;
+    font-size: 0.9rem;
+    font-weight: 900;
+  }
+
+  .official-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    border-radius: 8px;
+    background: #155e52;
+    color: #ffffff;
+    padding: 0.75rem 1rem;
+    font-weight: 900;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 720px) {
+    .retirement-hub {
+      grid-template-columns: 1fr;
+    }
+
+    .official-link {
+      width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+  }
+</style>

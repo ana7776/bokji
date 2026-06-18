@@ -1,0 +1,31 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import CheckCard from "@/components/CheckCard.astro";
+import { checkItems } from "@/lib/items";
+
+export function getStaticPaths() {
+  const paths = new Set(checkItems.map((item) => `${item.category}/${item.subCategory}`));
+  return [...paths].map((path) => {
+    const [category, subCategory] = path.split("/");
+    return { params: { category, subCategory } };
+  });
+}
+
+const { category, subCategory } = Astro.params;
+const items = checkItems.filter((item) => item.category === category && item.subCategory === subCategory);
+const label = items[0]?.subCategoryLabel ?? "세부";
+---
+
+<BaseLayout
+  title={`${label} 복지 체크도구 | 복지체크`}
+  description={`${label} 항목과 관련된 복지 신청 전 계산기와 확인 도구를 제공합니다.`}
+  canonicalPath={`/check/${category}/${subCategory}/`}
+>
+  <h1>{label} 복지 체크도구</h1>
+  <p class="lead">신청 전 기준을 이해하기 쉽도록 관련 계산기를 모았습니다.</p>
+  <section class="section">
+    <div class="grid">
+      {items.map((item) => <CheckCard item={item} />)}
+    </div>
+  </section>
+</BaseLayout>
