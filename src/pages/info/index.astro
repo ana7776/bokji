@@ -6,6 +6,33 @@ import PostCard from "@/components/PostCard.astro";
 const posts = (await getCollection("info")).sort(
   (a, b) => Date.parse(b.data.updatedAt) - Date.parse(a.data.updatedAt),
 );
+
+const topicGroups = [
+  {
+    title: "기초생활보장 기준",
+    links: [
+      { label: "소득인정액 정리", href: "/info/basic-livelihood-income-recognition/" },
+      { label: "2026 급여별 기준", href: "/info/basic-livelihood-benefit-threshold-2026/" },
+      { label: "중위소득 이해", href: "/info/median-income-basic/" },
+    ],
+  },
+  {
+    title: "공식자료 확인",
+    links: [
+      { label: "공공데이터 확인 순서", href: "/info/welfare-public-data-source-guide/" },
+      { label: "지자체 복지서비스", href: "/info/local-welfare-public-data-check/" },
+      { label: "지역 복지사업 검색", href: "/info/local-welfare-search-guide/" },
+    ],
+  },
+  {
+    title: "신청 전 생활비",
+    links: [
+      { label: "주거비 확인", href: "/info/housing-benefit-cost-check/" },
+      { label: "부채와 복지", href: "/info/debt-and-welfare-check/" },
+      { label: "공과금 지원", href: "/info/utility-cost-welfare/" },
+    ],
+  },
+];
 ---
 
 <BaseLayout
@@ -15,12 +42,55 @@ const posts = (await getCollection("info")).sort(
 >
   <h1>복지 가이드 전체 목록</h1>
   <p class="lead">신청 자격을 판단하기 전에 알아두면 좋은 기준과 준비사항을 정리했습니다.</p>
+
+  <section class="section topic-grid" aria-label="주제별 복지 가이드">
+    {topicGroups.map((group) => (
+      <article>
+        <h2>{group.title}</h2>
+        <div>
+          {group.links.map((link) => <a href={link.href}>{link.label}</a>)}
+        </div>
+      </article>
+    ))}
+  </section>
+
   <section class="section post-list">
     {posts.map((post) => <PostCard post={post} />)}
   </section>
 </BaseLayout>
 
 <style>
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.85rem;
+  }
+
+  .topic-grid article {
+    display: grid;
+    gap: 0.75rem;
+    border: 1px solid #d8e5f7;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 1rem;
+  }
+
+  .topic-grid h2 {
+    margin: 0;
+    font-size: 1.08rem;
+  }
+
+  .topic-grid div {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .topic-grid a {
+    color: #1d4ed8;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
   .post-list {
     border-top: 1px solid #dfe6ef;
   }
