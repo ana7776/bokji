@@ -1,16 +1,40 @@
 ---
+import { siteConfig } from "@/config/site";
+
 interface Props {
   slot: string;
   label?: string;
 }
 
 const { slot, label = "광고" } = Astro.props;
+const hasPublisherId = /^ca-pub-\d+$/.test(siteConfig.adsenseClientId) && !/^ca-pub-0+$/.test(siteConfig.adsenseClientId);
+const hasNumericSlotId = /^\d+$/.test(slot);
+const shouldRenderAdUnit = hasPublisherId && hasNumericSlotId;
+const shouldRenderPlaceholder = hasPublisherId && !hasNumericSlotId;
 ---
 
-<aside class="ad-slot" aria-label={label} data-ad-slot={slot}>
-  <span>AdSense Slot</span>
-  <small>승인 후 광고 코드 삽입 위치</small>
-</aside>
+{
+  shouldRenderAdUnit ? (
+    <aside class="ad-slot" aria-label={label} data-ad-slot={slot}>
+      <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-client={siteConfig.adsenseClientId}
+        data-ad-slot={slot}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+      <script is:inline>
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </aside>
+  ) : shouldRenderPlaceholder ? (
+    <aside class="ad-slot ad-slot-placeholder" aria-label={label} data-ad-slot={slot}>
+      <span>{label}</span>
+      <small>AdSense 광고 단위 ID를 발급받으면 숫자 슬롯 ID로 교체하세요.</small>
+    </aside>
+  ) : null
+}
 
 <style>
   .ad-slot {

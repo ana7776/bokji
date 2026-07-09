@@ -1,0 +1,73 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { siteConfig } from "@/config/site";
+---
+
+<BaseLayout
+  title="문의 | 복지체크"
+  description="복지체크의 계산기 오류 제보, 출처 정정 요청, 광고 및 사이트 운영 관련 문의 방법을 안내합니다."
+  canonicalPath="/contact/"
+>
+  <article class="content">
+    <p class="eyebrow">contact</p>
+    <h1>문의와 정정 요청</h1>
+    <p class="lead">
+      복지체크의 계산기 오류, 공식 출처 변경, 오탈자, 광고 및 운영 관련 문의는 아래 기준에 따라 보내주세요.
+    </p>
+
+    <h2>문의 주소</h2>
+    <p>
+      이메일: <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>
+    </p>
+
+    <h2>정정 요청 시 포함할 내용</h2>
+    <table>
+      <tbody>
+        <tr>
+          <th scope="row">페이지 주소</th>
+          <td>오류가 있는 복지체크 페이지의 URL을 함께 알려주세요.</td>
+        </tr>
+        <tr>
+          <th scope="row">확인한 공식 출처</th>
+          <td>보건복지부, 복지로, 국민연금공단, 고용노동부 등 공식 고시나 안내 페이지 주소를 함께 보내주시면 더 빠르게 확인할 수 있습니다.</td>
+        </tr>
+        <tr>
+          <th scope="row">수정이 필요한 내용</th>
+          <td>금액, 기준연도, 소득·재산 산정 방식, 링크 오류 등 수정이 필요한 부분을 구체적으로 적어주세요.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>확인 후 반영 기준</h2>
+    <table>
+      <tbody>
+        <tr>
+          <th scope="row">우선 확인 대상</th>
+          <td>기준 중위소득, 급여별 선정 기준, 기초연금, 주거급여, 세금·보험료처럼 금액과 자격 판단에 영향을 주는 오류를 우선 확인합니다.</td>
+        </tr>
+        <tr>
+          <th scope="row">공식 자료 대조</th>
+          <td>제보 내용은 보건복지부, 복지로, 국민연금공단, 고용노동부, 국세청, 지자체 공고 등 공개 자료와 대조합니다.</td>
+        </tr>
+        <tr>
+          <th scope="row">반영 방식</th>
+          <td>오류가 확인되면 관련 본문, 계산기 설명, 공식 출처 링크를 함께 점검해 같은 기준이 반복해서 잘못 안내되지 않도록 수정합니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>응답 안내</h2>
+    <p>
+      모든 문의에 개별 상담 답변을 제공하지는 않습니다. 다만 계산 기준이나 출처 오류처럼 이용자에게 영향을 줄 수 있는 내용은 공식 자료를 확인한 뒤 페이지에 반영합니다.
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .eyebrow {
+    margin: 0;
+    color: #2563eb;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+</style>

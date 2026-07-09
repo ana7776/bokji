@@ -23,7 +23,8 @@ const label = items[0]?.subCategoryLabel ?? "세부";
 >
   <h1>{label} 복지 체크도구</h1>
   <p class="lead">신청 전 기준을 이해하기 쉽도록 관련 계산기를 모았습니다.</p>
-  <section class="section">
+  <section class="section" aria-labelledby="subcategory-tools-title">
+    <h2 id="subcategory-tools-title">{label} 관련 체크도구</h2>
     <div class="grid">
       {items.map((item) => <CheckCard item={item} />)}
     </div>

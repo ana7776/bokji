@@ -1,0 +1,110 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { siteConfig } from "@/config/site";
+---
+
+<BaseLayout
+  title="사이트 소개 | 복지체크"
+  description="복지체크의 운영자, 운영 목적, 자료 검수 방식, 업데이트 책임과 공식 기관 확인 원칙을 안내합니다."
+  canonicalPath="/about/"
+>
+  <article class="content">
+    <p class="eyebrow">about</p>
+    <h1>복지체크는 신청 전 기준을 정리하는 복지 정보 서비스입니다</h1>
+    <p class="lead">
+      복지체크는 기초생활보장, 기초연금, 주거급여, 근로소득, 생활비처럼 신청 전에 확인해야 하는 숫자와 기준을
+      계산기와 해설 글로 정리하는 독립 정보 사이트입니다.
+    </p>
+
+    <h2>운영자 정보</h2>
+    <table>
+      <tbody>
+        <tr>
+          <th scope="row">운영자</th>
+          <td>{siteConfig.operatorName}</td>
+        </tr>
+        <tr>
+          <th scope="row">운영 주체</th>
+          <td>복지체크 운영팀</td>
+        </tr>
+        <tr>
+          <th scope="row">운영 형태</th>
+          <td>대한민국 기반의 개인 운영 정보서비스입니다. 정부기관, 지자체, 공공기관을 대리하지 않습니다.</td>
+        </tr>
+        <tr>
+          <th scope="row">운영 책임</th>
+          <td>{siteConfig.operatorName} 운영자가 콘텐츠 작성, 공식 출처 확인, 수정 요청 검토를 담당합니다.</td>
+        </tr>
+        <tr>
+          <th scope="row">이메일</th>
+          <td><a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a></td>
+        </tr>
+        <tr>
+          <th scope="row">전화</th>
+          <td><a href={`tel:${siteConfig.contactPhone.replaceAll("-", "")}`}>{siteConfig.contactPhone}</a></td>
+        </tr>
+        <tr>
+          <th scope="row">소재지</th>
+          <td>대한민국</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>운영 목적</h2>
+    <p>
+      복지 제도는 소득, 재산, 가구원, 주거 형태, 부채, 신청 시점에 따라 판단 기준이 달라집니다. 복지체크는
+      사용자가 상담이나 신청 전에 필요한 항목을 빠르게 정리하고, 어떤 공식 자료를 확인해야 하는지 찾을 수 있도록 돕습니다.
+    </p>
+
+    <h2>전문성 및 검수 방식</h2>
+    <p>
+      복지체크의 글과 계산기는 보건복지부, 복지로, 국민연금공단, 고용노동부, 국세청, 공공데이터포털 등 공개된
+      공식 자료를 우선 확인해 작성합니다. 금액, 기준연도, 적용 비율, 공식 확인 경로는 가능한 한 본문과 출처 페이지에 함께 남깁니다.
+    </p>
+    <p>
+      새 기준이 발표되거나 사용자가 오류를 제보하면 운영자가 공식 자료를 다시 확인한 뒤 수정합니다. 민감한 복지·세금·소득
+      정보는 단정적인 표현보다 “신청 전 참고”와 “공식 기관 최종 확인” 원칙을 우선합니다.
+    </p>
+
+    <h2>제공하는 콘텐츠</h2>
+    <table>
+      <tbody>
+        <tr>
+          <th scope="row">복지 계산기</th>
+          <td>기준 중위소득, 소득인정액, 급여별 기준, 기초연금, 주거비, 생활비 등 신청 전 참고 계산을 제공합니다.</td>
+        </tr>
+        <tr>
+          <th scope="row">정보 가이드</th>
+          <td>소득 기준, 재산 기준, 부채 차감, 서류 준비, 공식 모의계산 사용 순서를 설명합니다.</td>
+        </tr>
+        <tr>
+          <th scope="row">공식 출처 연결</th>
+          <td>최종 확인이 필요한 보건복지부, 복지로, 국민연금공단, 고용노동부 등 공식 기관 자료로 연결합니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>중요 안내</h2>
+    <p>
+      복지체크는 공식 신청 기관이 아니며, 계산 결과는 실제 심사 결과와 다를 수 있습니다. 최종 자격, 급여액, 접수 가능 여부는
+      신청 시점의 공식 지침과 담당 기관 상담 결과를 기준으로 확인해야 합니다.
+    </p>
+
+    <h2>오류 제보 및 정정</h2>
+    <p>
+      금액, 기준, 링크가 바뀐 부분을 발견했다면 <a href="/contact/">문의 페이지</a>,
+      <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>,
+      또는 <a href={`tel:${siteConfig.contactPhone.replaceAll("-", "")}`}>{siteConfig.contactPhone}</a>로 알려주세요.
+      공식 출처를 확인한 뒤 필요한 경우 정정합니다.
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .eyebrow {
+    margin: 0;
+    color: #2563eb;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+</style>

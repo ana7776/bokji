@@ -3,7 +3,10 @@ import { getCollection, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import AdSenseSlot from "@/components/AdSenseSlot.astro";
 import PostCard from "@/components/PostCard.astro";
+import { siteConfig } from "@/config/site";
 import { postPath } from "@/lib/info";
+import { absoluteUrl } from "@/lib/items";
+import { reportSeries } from "@/lib/reportSeries";
 
 export async function getStaticPaths() {
   const posts = await getCollection("info");
@@ -13,6 +16,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const posts = await getCollection("info");
+const postBySlug = new Map<string, (typeof posts)[number]>(posts.map((item) => [item.slug, item]));
 const related = posts
   .filter((candidate) => candidate.slug !== post.slug)
   .map((candidate) => ({
@@ -23,9 +27,48 @@ const related = posts
   .sort((a, b) => b.score - a.score)
   .slice(0, 4)
   .map(({ post }) => post);
+const currentSeries = reportSeries.find((series) => series.slugs.includes(post.slug));
+const seriesPosts = currentSeries
+  ? currentSeries.slugs.map((slug) => postBySlug.get(slug)).filter(Boolean)
+  : [];
+const currentSeriesIndex = currentSeries ? currentSeries.slugs.indexOf(post.slug) : -1;
+const nextSeriesPost =
+  currentSeries && currentSeriesIndex >= 0
+    ? postBySlug.get(currentSeries.slugs[currentSeriesIndex + 1]) ?? seriesPosts.find((item) => item?.slug !== post.slug)
+    : undefined;
+const path = postPath(post);
+const articleJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.data.title,
+    description: post.data.description,
+    datePublished: post.data.publishedAt,
+    dateModified: post.data.updatedAt,
+    inLanguage: "ko-KR",
+    author: {
+      "@type": "Organization",
+      name: siteConfig.publisher,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.publisher,
+    },
+    mainEntityOfPage: absoluteUrl(path),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "홈", item: siteConfig.domain },
+      { "@type": "ListItem", position: 2, name: "복지 가이드", item: absoluteUrl("/info/") },
+      { "@type": "ListItem", position: 3, name: post.data.title, item: absoluteUrl(path) },
+    ],
+  },
+];
 ---
 
-<BaseLayout title={`${post.data.title} | 복지체크`} description={post.data.description} canonicalPath={postPath(post)}>
+<BaseLayout title={`${post.data.title} | 복지체크`} description={post.data.description} canonicalPath={path} jsonLd={articleJsonLd}>
   <article>
     <p class="eyebrow">{post.data.category}</p>
     <h1>{post.data.title}</h1>
@@ -36,7 +79,38 @@ const related = posts
       <Content />
     </div>
     <AdSenseSlot slot="info-middle" label="본문 중간 광고" />
+    <AdSenseSlot slot="info-bottom" label="본문 하단 광고" />
   </article>
+
+  {
+    currentSeries && (
+      <section class="section reading-path" aria-labelledby="reading-path-title">
+        <div>
+          <p class="eyebrow">next reading</p>
+          <h2 id="reading-path-title">{currentSeries.title}</h2>
+          <p>{currentSeries.description}</p>
+        </div>
+        {nextSeriesPost && (
+          <a class="next-card" href={postPath(nextSeriesPost)}>
+            <span>다음 글</span>
+            <strong>{nextSeriesPost.data.title}</strong>
+            <small>{nextSeriesPost.data.description}</small>
+          </a>
+        )}
+        <ol>
+          {seriesPosts.map(
+            (item) =>
+              item && (
+                <li class={item.slug === post.slug ? "is-current" : ""}>
+                  {item.slug === post.slug ? <span>{item.data.title}</span> : <a href={postPath(item)}>{item.data.title}</a>}
+                </li>
+              ),
+          )}
+        </ol>
+        <a class="guide-link" href="/info/">복지 가이드 전체 목록 보기</a>
+      </section>
+    )
+  }
 
   <section class="section post-list">
     <h2>관련 가이드</h2>
@@ -57,5 +131,81 @@ const related = posts
 
   .post-list {
     border-top: 1px solid #dfe6ef;
+  }
+
+  .reading-path {
+    display: grid;
+    gap: 1rem;
+    border: 1px solid #d8e5f7;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 1.15rem;
+  }
+
+  .reading-path h2,
+  .reading-path p {
+    margin: 0;
+  }
+
+  .reading-path p:not(.eyebrow) {
+    color: #536174;
+    line-height: 1.65;
+  }
+
+  .next-card {
+    display: grid;
+    gap: 0.45rem;
+    border: 1px solid #c8d8f2;
+    border-radius: 8px;
+    background: #f8fbff;
+    padding: 1rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .next-card span,
+  .guide-link {
+    color: #1d4ed8;
+    font-weight: 900;
+  }
+
+  .next-card strong {
+    color: #172033;
+    font-size: 1.05rem;
+    line-height: 1.45;
+  }
+
+  .next-card small {
+    color: #536174;
+    line-height: 1.55;
+  }
+
+  .reading-path ol {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding-left: 1.25rem;
+  }
+
+  .reading-path a {
+    text-decoration: none;
+  }
+
+  .reading-path li {
+    color: #6a7787;
+  }
+
+  .reading-path li a {
+    color: #1d4ed8;
+    font-weight: 800;
+  }
+
+  .reading-path .is-current span {
+    color: #172033;
+    font-weight: 900;
+  }
+
+  .guide-link {
+    justify-self: start;
   }
 </style>

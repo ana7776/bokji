@@ -20,7 +20,8 @@ const label = items[0]?.categoryLabel ?? "복지";
 >
   <h1>{label} 복지 체크도구</h1>
   <p class="lead">{label}와 관련된 소득, 재산, 생활비 항목을 신청 전에 확인하세요.</p>
-  <section class="section">
+  <section class="section" aria-labelledby="category-tools-title">
+    <h2 id="category-tools-title">{label} 전체 체크도구</h2>
     <div class="grid">
       {items.map((item) => <CheckCard item={item} />)}
     </div>

@@ -1,0 +1,31 @@
+[
+  {
+    "id": "page-crawl-first-image",
+    "pageUrl": "https://example.com/article",
+    "alt": "복지 신청 서류를 확인하는 이미지",
+    "limit": 1,
+    "tags": ["guide", "welfare"]
+  },
+  {
+    "id": "page-crawl-all-images",
+    "pageUrl": "https://example.com/gallery",
+    "pick": "all",
+    "alt": "페이지에서 발견한 이미지",
+    "tags": ["gallery"]
+  },
+  {
+    "id": "direct-image-example",
+    "imageUrl": "https://example.com/sample.jpg",
+    "alt": "직접 지정한 원본 이미지",
+    "tags": ["direct"]
+  },
+  {
+    "id": "direct-image-list-example",
+    "imageUrls": [
+      "https://example.com/sample-1.jpg",
+      "https://example.com/sample-2.png"
+    ],
+    "alt": "직접 지정한 여러 원본 이미지",
+    "tags": ["direct-list"]
+  }
+]
