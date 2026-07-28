@@ -1,0 +1,61 @@
+<section class="section bkc" id="c-bf">
+  <h2>부동산 중개수수료 계산</h2>
+  <p class="bkc-basis">주택 기준 법정 상한요율 · 실제 요율은 상한 내에서 중개사와 협의</p>
+  <div class="bkc-grid">
+    <label>거래 유형
+      <select id="bf-type"><option value="sale" selected>매매·교환</option><option value="lease">전세·월세(임대차)</option></select>
+    </label>
+    <label>매매가 또는 보증금(원)<input id="bf-price" type="number" inputmode="numeric" min="0" step="10000000" value="300000000" /></label>
+    <label>월세(임대차만, 원)<input id="bf-rent" type="number" inputmode="numeric" min="0" step="50000" value="0" /></label>
+  </div>
+  <output id="bf-result" aria-live="polite">입력값을 기준으로 수수료 상한을 표시합니다.</output>
+  <div class="bkc-table" id="bf-table"></div>
+  <p class="bkc-note">월세 거래금액은 '보증금 + 월세 × 100'으로 환산하되, 그 값이 5,000만 원 미만이면 '보증금 + 월세 × 70'을 적용합니다. 표시 금액은 법정 상한이며 부가가치세(일반과세 중개사 10%)는 별도입니다. 오피스텔(주거용, 요율 별도)과 상가는 기준이 다릅니다.</p>
+  <p class="bkc-warning">본 계산기는 실제 심사 결과와 다를 수 있습니다.</p>
+</section>
+<script>
+  import { formatKRW } from "@/lib/calc2026";
+  const root = document.getElementById("c-bf");
+  if (root) {
+    const type = document.getElementById("bf-type") as HTMLSelectElement | null;
+    const price = document.getElementById("bf-price") as HTMLInputElement | null;
+    const rent = document.getElementById("bf-rent") as HTMLInputElement | null;
+    const result = document.getElementById("bf-result");
+    const table = document.getElementById("bf-table");
+    const SALE: Array<[number, number, number | null]> = [
+      [50_000_000, 0.006, 250_000], [200_000_000, 0.005, 800_000], [900_000_000, 0.004, null],
+      [1_200_000_000, 0.005, null], [1_500_000_000, 0.006, null], [Infinity, 0.007, null],
+    ];
+    const LEASE: Array<[number, number, number | null]> = [
+      [50_000_000, 0.005, 200_000], [100_000_000, 0.004, 300_000], [1_200_000_000, 0.003, null],
+      [1_500_000_000, 0.004, null], [Infinity, 0.006, null],
+    ];
+    const render = () => {
+      if (!result || !table) return;
+      const p = Number(price?.value || 0);
+      if (p <= 0) { result.textContent = "금액을 입력해 주세요."; table.innerHTML = ""; return; }
+      const isLease = type?.value === "lease";
+      let base = p;
+      let baseNote = "매매가 기준";
+      if (isLease) {
+        const r = Number(rent?.value || 0);
+        base = p + r * 100;
+        if (base < 50_000_000 && r > 0) base = p + r * 70;
+        baseNote = r > 0 ? "환산 거래금액 (보증금 + 월세 환산)" : "전세 보증금 기준";
+      }
+      const bands = isLease ? LEASE : SALE;
+      const band = bands.find(([limit]) => base < limit) ?? bands[bands.length - 1];
+      let fee = base * band[1];
+      if (band[2] !== null) fee = Math.min(fee, band[2]);
+      result.textContent = `중개수수료 상한: ${formatKRW(fee)} (요율 ${(band[1] * 100).toFixed(1)}%${band[2] ? `, 한도 ${formatKRW(band[2])}` : ""})`;
+      table.innerHTML = `<table><tbody>
+        <tr><th scope="row">${baseNote}</th><td>${formatKRW(base)}</td></tr>
+        <tr><th scope="row">적용 상한요율</th><td>${(band[1] * 100).toFixed(1)}%</td></tr>
+        <tr><th scope="row">부가세 포함 시(10%)</th><td>${formatKRW(fee * 1.1)}</td></tr>
+      </tbody></table>`;
+    };
+    [price, rent].forEach((el) => el?.addEventListener("input", render));
+    type?.addEventListener("change", render);
+    render();
+  }
+</script>

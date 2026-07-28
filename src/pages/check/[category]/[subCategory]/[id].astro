@@ -9,6 +9,48 @@ import { siteConfig } from "@/config/site";
 import { absoluteUrl, checkItems, itemPath, relatedItems } from "@/lib/items";
 import { relatedPostsForTags } from "@/lib/info";
 import { relatedPublicServices } from "@/lib/publicServices";
+import NetPayMonthly from "@/components/calculators/NetPayMonthly.astro";
+import NetPayAnnual from "@/components/calculators/NetPayAnnual.astro";
+import SocialInsurance from "@/components/calculators/SocialInsurance.astro";
+import SeverancePay from "@/components/calculators/SeverancePay.astro";
+import UnemploymentBenefit from "@/components/calculators/UnemploymentBenefit.astro";
+import WeeklyHolidayPay from "@/components/calculators/WeeklyHolidayPay.astro";
+import MinimumWageMonthly from "@/components/calculators/MinimumWageMonthly.astro";
+import AnnualLeavePay from "@/components/calculators/AnnualLeavePay.astro";
+import Vat from "@/components/calculators/Vat.astro";
+import GlobalIncomeTax from "@/components/calculators/GlobalIncomeTax.astro";
+import DepositInterest from "@/components/calculators/DepositInterest.astro";
+import SavingsInterest from "@/components/calculators/SavingsInterest.astro";
+import LoanInterest from "@/components/calculators/LoanInterest.astro";
+import JeonseLoanInterest from "@/components/calculators/JeonseLoanInterest.astro";
+import AcquisitionTax from "@/components/calculators/AcquisitionTax.astro";
+import BrokerageFee from "@/components/calculators/BrokerageFee.astro";
+import AreaConverter from "@/components/calculators/AreaConverter.astro";
+import ElectricityBill from "@/components/calculators/ElectricityBill.astro";
+import TelecomSavings from "@/components/calculators/TelecomSavings.astro";
+
+// 도구 ID → 전용 계산기 컴포넌트 (2026년 기준 실계산 로직)
+const calculatorComponents: Record<string, (props: Record<string, never>) => unknown> = {
+  "monthly-salary-net-pay": NetPayMonthly,
+  "annual-salary-net-pay": NetPayAnnual,
+  "social-insurance": SocialInsurance,
+  "severance-pay": SeverancePay,
+  "unemployment-benefit": UnemploymentBenefit,
+  "weekly-holiday-pay": WeeklyHolidayPay,
+  "minimum-wage-monthly": MinimumWageMonthly,
+  "annual-leave-pay": AnnualLeavePay,
+  vat: Vat,
+  "global-income-tax-simple": GlobalIncomeTax,
+  "deposit-interest": DepositInterest,
+  "installment-savings-interest": SavingsInterest,
+  "loan-interest": LoanInterest,
+  "jeonse-loan-interest": JeonseLoanInterest,
+  "acquisition-tax": AcquisitionTax,
+  "brokerage-fee": BrokerageFee,
+  "area-converter": AreaConverter,
+  "electricity-bill": ElectricityBill,
+  "telecom-savings": TelecomSavings,
+};
 
 export function getStaticPaths() {
   return checkItems.map((item) => ({
@@ -22,6 +64,7 @@ export function getStaticPaths() {
 }
 
 const { item } = Astro.props;
+const DedicatedCalculator = calculatorComponents[item.id];
 const posts = await getCollection("info");
 const relatedPosts = relatedPostsForTags(posts, item.relatedTags, 4);
 const moreItems = relatedItems(item, 4);
@@ -386,6 +429,8 @@ const detailJsonLd = [
           </p>
           <p class="calculator-warning">원천징수는 최종 세액 확정이 아니며, 종합소득세 신고와 복지 심사 결과는 달라질 수 있습니다.</p>
         </section>
+      ) : DedicatedCalculator ? (
+        <DedicatedCalculator />
       ) : (
         <section class="section calculator" data-calculator={item.id}>
           <h2>간편 계산</h2>
@@ -762,6 +807,101 @@ const detailJsonLd = [
     render();
   </script>
 </BaseLayout>
+
+<style is:global>
+  /* 전용 계산기(components/calculators) 공용 스타일 — 이 페이지에서만 로드됨 */
+  .bkc {
+    display: grid;
+    gap: 0.9rem;
+    max-width: 760px;
+    border: 1px solid #d9e1ec;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 1.1rem;
+  }
+
+  .bkc h2 {
+    margin: 0;
+  }
+
+  .bkc-basis {
+    margin: 0;
+    color: #2563eb;
+    font-size: 0.88rem;
+    font-weight: 800;
+  }
+
+  .bkc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .bkc label {
+    display: grid;
+    gap: 0.35rem;
+    font-weight: 800;
+  }
+
+  .bkc input,
+  .bkc select {
+    width: 100%;
+    border: 1px solid #c8d8f2;
+    border-radius: 8px;
+    padding: 0.75rem 0.85rem;
+    font: inherit;
+  }
+
+  .bkc output {
+    border-radius: 8px;
+    background: #eff6ff;
+    padding: 0.85rem;
+    color: #1e3a8a;
+    font-weight: 900;
+  }
+
+  .bkc-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .bkc-table th,
+  .bkc-table td {
+    padding: 0.55rem 0.6rem;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+  }
+
+  .bkc-table td {
+    text-align: right;
+  }
+
+  .bkc-note {
+    margin: 0;
+    color: #526071;
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+
+  .bkc-warning {
+    position: relative;
+    margin: 0;
+    border-radius: 8px;
+    background: #dc2626;
+    padding: 1rem;
+    color: #ffffff;
+    font-weight: 900;
+    line-height: 1.45;
+    text-align: center;
+    box-shadow: 0 8px 18px rgba(220, 38, 38, 0.22);
+  }
+
+  @media (max-width: 720px) {
+    .bkc-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
 
 <style>
   .detail {

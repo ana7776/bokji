@@ -1,0 +1,41 @@
+<section class="section bkc" id="c-tc">
+  <h2>통신비 절약 계산</h2>
+  <p class="bkc-basis">현재 요금과 변경 후 요금(알뜰폰·요금제 변경 등)의 차액을 기간별로 환산</p>
+  <div class="bkc-grid">
+    <label>현재 월 통신비(원)<input id="tc-now" type="number" inputmode="numeric" min="0" step="1000" value="69000" /></label>
+    <label>변경 후 월 통신비(원)<input id="tc-new" type="number" inputmode="numeric" min="0" step="1000" value="30000" /></label>
+    <label>남은 약정 위약금(선택, 원)<input id="tc-penalty" type="number" inputmode="numeric" min="0" step="10000" value="0" /></label>
+  </div>
+  <output id="tc-result" aria-live="polite">입력값을 기준으로 절감액을 표시합니다.</output>
+  <div class="bkc-table" id="tc-table"></div>
+  <p class="bkc-note">위약금을 입력하면 몇 개월 만에 위약금을 회수하는지 함께 계산합니다. 기초수급자·차상위·장애인·65세 이상 기초연금 수급자는 통신사 요금감면(월 최대 26,000원 안팎)을 별도로 신청할 수 있으니 요금제 변경 전에 감면 대상 여부부터 확인하세요.</p>
+  <p class="bkc-warning">본 계산기는 실제 심사 결과와 다를 수 있습니다.</p>
+</section>
+<script>
+  import { formatKRW } from "@/lib/calc2026";
+  const root = document.getElementById("c-tc");
+  if (root) {
+    const g = (id: string) => document.getElementById(id) as HTMLInputElement | null;
+    const now = g("tc-now"), next = g("tc-new"), penalty = g("tc-penalty");
+    const result = document.getElementById("tc-result");
+    const table = document.getElementById("tc-table");
+    const render = () => {
+      if (!result || !table) return;
+      const a = Number(now?.value || 0);
+      const b = Number(next?.value || 0);
+      if (a <= 0) { result.textContent = "현재 월 통신비를 입력해 주세요."; table.innerHTML = ""; return; }
+      const saving = a - b;
+      if (saving <= 0) { result.textContent = "변경 후 요금이 더 높아 절감 효과가 없습니다."; table.innerHTML = ""; return; }
+      const p = Number(penalty?.value || 0);
+      const breakeven = p > 0 ? Math.ceil(p / saving) : 0;
+      result.textContent = `월 ${formatKRW(saving)} 절약 → 연간 ${formatKRW(saving * 12)}`;
+      table.innerHTML = `<table><tbody>
+        <tr><th scope="row">1년 절감액</th><td>${formatKRW(saving * 12)}</td></tr>
+        <tr><th scope="row">2년 절감액</th><td>${formatKRW(saving * 24)}</td></tr>
+        ${p > 0 ? `<tr><th scope="row">위약금 회수 기간</th><td>약 ${breakeven}개월 (위약금 ${formatKRW(p)})</td></tr>` : ""}
+      </tbody></table>`;
+    };
+    [now, next, penalty].forEach((el) => el?.addEventListener("input", render));
+    render();
+  }
+</script>
