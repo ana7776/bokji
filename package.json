@@ -1,25 +1,19 @@
 {
-  "name": "bokjicheck-hybrid-static-site",
+  "name": "sosotime-blog",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=20"
-  },
   "scripts": {
-    "dev": "astro dev --host 127.0.0.1",
-    "build": "astro check && astro build",
-    "preview": "astro preview --host 127.0.0.1",
-    "check:public-data": "node scripts/check-public-data-apis.mjs",
-    "fetch:public-data": "node scripts/fetch-public-data-cache.mjs",
-    "images:r2": "node scripts/image-r2-pipeline.mjs"
+    "dev": "node scripts/dev-server.js",
+    "build": "node scripts/generate-post-images.js && node scripts/generate-index-page.js && node scripts/generate-post-pages.js && node scripts/generate-sitemap.js",
+    "image:generate": "node scripts/generate-post-images.js",
+    "image:fetch": "node scripts/fetch-r2-image.js",
+    "image:upload": "node scripts/upload-r2-image.js"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
-    "@astrojs/sitemap": "3.2.1",
-    "@aws-sdk/client-s3": "^3.1075.0",
-    "astro": "^4.16.18",
-    "sharp": "^0.35.2",
-    "typescript": "^5.6.3"
+    "@aws-sdk/client-s3": "^3.1075.0"
   }
 }

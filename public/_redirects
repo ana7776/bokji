@@ -1,4 +1,6 @@
-https://www.bokjicheck.co.kr/* https://bokjicheck.co.kr/:splat 301
-/privacy-policy /privacy/ 301
-/privacy-policy/ /privacy/ 301
-/sitemap.xml /sitemap-index.xml 200
+# Retired pages
+/upload /contact 301
+/upload/ /contact 301
+
+# Canonical host
+https://www.sosotime.com/* https://sosotime.com/:splat 301
