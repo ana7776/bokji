@@ -1,0 +1,219 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PostCard from "@/components/PostCard.astro";
+import { reportSeries } from "@/lib/reportSeries";
+
+const posts = (await getCollection("info")).sort(
+  (a, b) => Date.parse(b.data.updatedAt) - Date.parse(a.data.updatedAt),
+);
+
+const postBySlug = new Map<string, (typeof posts)[number]>(posts.map((post) => [post.slug, post]));
+const reports = reportSeries.map((series) => ({
+  ...series,
+  posts: series.slugs.map((slug) => postBySlug.get(slug)).filter(Boolean),
+}));
+
+const topicGroups = [
+  {
+    title: "기초생활보장 기준",
+    links: [
+      { label: "소득인정액 정리", href: "/info/basic-livelihood-income-recognition/" },
+      { label: "2026 급여별 기준", href: "/info/basic-livelihood-benefit-threshold-2026/" },
+      { label: "급여별 모의계산", href: "/info/basic-livelihood-benefit-simulation-2026/" },
+      { label: "의료급여 부양의무자", href: "/info/medical-benefit-family-support/" },
+      { label: "중위소득 이해", href: "/info/median-income-basic/" },
+    ],
+  },
+  {
+    title: "재산과 주거급여",
+    links: [
+      { label: "자동차·재산 정리", href: "/info/basic-livelihood-car-property-check/" },
+      { label: "2026 기준임대료", href: "/info/housing-benefit-standard-rent-2026/" },
+      { label: "주거비 확인", href: "/info/housing-benefit-cost-check/" },
+      { label: "LH·공공임대 소득기준", href: "/info/public-rental-income-standard-2026/" },
+    ],
+  },
+  {
+    title: "노후와 기초연금",
+    links: [
+      { label: "기초연금 소득인정액", href: "/info/basic-pension-income-check-2026/" },
+      { label: "기초연금 공식 모의계산", href: "/info/basic-pension-official-simulation-guide/" },
+      { label: "은퇴 소득 공백", href: "/info/retirement-income-gap/" },
+      { label: "건강보험료 확인", href: "/info/health-insurance-premium-check/" },
+    ],
+  },
+  {
+    title: "공식자료 확인",
+    links: [
+      { label: "복지로 모의계산 활용", href: "/info/bokjiro-simulation-before-apply/" },
+      { label: "공공데이터 확인 순서", href: "/info/welfare-public-data-source-guide/" },
+      { label: "지자체 복지서비스", href: "/info/local-welfare-public-data-check/" },
+      { label: "지역 복지사업 검색", href: "/info/local-welfare-search-guide/" },
+    ],
+  },
+  {
+    title: "신청 전 생활비",
+    links: [
+      { label: "부채와 복지", href: "/info/debt-and-welfare-check/" },
+      { label: "공과금 지원", href: "/info/utility-cost-welfare/" },
+      { label: "통신비 절약", href: "/info/telecom-cost-saving/" },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="복지 가이드 전체 목록 | 복지체크"
+  description="복지 신청 전 소득, 재산, 주거, 생활비 기준을 이해하기 위한 정보성 칼럼 전체 목록입니다."
+  canonicalPath="/info/"
+>
+  <h1>복지 가이드 전체 목록</h1>
+  <p class="lead">신청 자격을 판단하기 전에 알아두면 좋은 기준과 준비사항을 정리했습니다.</p>
+
+  <section class="section report-list" aria-labelledby="report-list-title">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">deep report</p>
+        <h2 id="report-list-title">심층 리포트로 이어서 보기</h2>
+      </div>
+    </div>
+    <div class="report-grid">
+      {reports.map((report) => (
+        <article>
+          <h3>{report.title}</h3>
+          <p>{report.description}</p>
+          <ol>
+            {report.posts.map((post) => (
+              post && (
+                <li>
+                  <a href={`/info/${post.slug}/`}>{post.data.title}</a>
+                </li>
+              )
+            ))}
+          </ol>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section topic-grid" aria-label="주제별 복지 가이드">
+    {topicGroups.map((group) => (
+      <article>
+        <h2>{group.title}</h2>
+        <div>
+          {group.links.map((link) => <a href={link.href}>{link.label}</a>)}
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="section post-list" aria-labelledby="all-guides-title">
+    <h2 id="all-guides-title">전체 복지 가이드</h2>
+    {posts.map((post) => <PostCard post={post} />)}
+  </section>
+</BaseLayout>
+
+<style>
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-head h2 {
+    margin: 0;
+  }
+
+  .eyebrow {
+    margin: 0;
+    color: #2563eb;
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .report-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .report-grid article {
+    display: grid;
+    gap: 0.75rem;
+    border: 1px solid #d8e5f7;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 1rem;
+  }
+
+  .report-grid h3 {
+    margin: 0;
+    color: #172033;
+    font-size: 1.08rem;
+  }
+
+  .report-grid p {
+    margin: 0;
+    color: #536174;
+    line-height: 1.65;
+  }
+
+  .report-grid ol {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0;
+    padding-left: 1.25rem;
+  }
+
+  .report-grid a {
+    color: #1d4ed8;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.85rem;
+  }
+
+  .topic-grid article {
+    display: grid;
+    gap: 0.75rem;
+    border: 1px solid #d8e5f7;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 1rem;
+  }
+
+  .topic-grid h2 {
+    margin: 0;
+    font-size: 1.08rem;
+  }
+
+  .topic-grid div {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .topic-grid a {
+    color: #1d4ed8;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .post-list {
+    border-top: 1px solid #dfe6ef;
+  }
+
+  @media (max-width: 760px) {
+    .report-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,48 @@
+<section class="section bkc" id="c-jl">
+  <h2>전세대출 이자 계산</h2>
+  <p class="bkc-basis">만기일시상환(전세대출 일반) 기준 · 월세 조건과 비교 가능</p>
+  <div class="bkc-grid">
+    <label>대출 금액(원)<input id="jl-amount" type="number" inputmode="numeric" min="0" step="10000000" value="200000000" /></label>
+    <label>연 금리(%)<input id="jl-rate" type="number" inputmode="decimal" min="0" step="0.01" value="3.8" /></label>
+    <label>대출 기간
+      <select id="jl-term"><option value="12">1년</option><option value="24" selected>2년</option><option value="36">3년</option><option value="48">4년</option></select>
+    </label>
+    <label>비교할 월세(선택, 원)<input id="jl-rent" type="number" inputmode="numeric" min="0" step="50000" value="0" /></label>
+  </div>
+  <output id="jl-result" aria-live="polite">입력값을 기준으로 이자를 표시합니다.</output>
+  <div class="bkc-table" id="jl-table"></div>
+  <p class="bkc-note">전세대출은 매달 이자만 내다가 계약 종료 시 보증금으로 원금을 갚는 만기일시상환이 일반적입니다. 실제로는 보증기관(HUG·HF·SGI) 보증료 연 0.02~0.4%대가 추가되고, 버팀목·신생아특례 같은 정책대출은 소득 요건에 따라 금리가 크게 낮아집니다. 무주택 세대주는 원리금 상환액의 40%(연 400만 원 한도) 소득공제도 확인하세요.</p>
+  <p class="bkc-warning">본 계산기는 실제 심사 결과와 다를 수 있습니다.</p>
+</section>
+<script>
+  import { formatKRW } from "@/lib/calc2026";
+  const root = document.getElementById("c-jl");
+  if (root) {
+    const g = (id: string) => document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null;
+    const amount = g("jl-amount"), rate = g("jl-rate"), term = g("jl-term"), rent = g("jl-rent");
+    const result = document.getElementById("jl-result");
+    const table = document.getElementById("jl-table");
+    const render = () => {
+      if (!result || !table) return;
+      const a = Number(amount?.value || 0);
+      const r = Number(rate?.value || 0) / 100;
+      const n = Number(term?.value || 24);
+      if (a <= 0 || r <= 0) { result.textContent = "대출 금액과 금리를 입력해 주세요."; table.innerHTML = ""; return; }
+      const monthly = a * r / 12;
+      const totalInt = monthly * n;
+      const rentV = Number(rent?.value || 0);
+      const compare = rentV > 0
+        ? `<tr><th scope="row">월세와 비교</th><td>월세 ${formatKRW(rentV)} 대비 월 ${formatKRW(Math.abs(rentV - monthly))} ${monthly < rentV ? "저렴" : "부담 증가"}</td></tr>`
+        : "";
+      result.textContent = `월 이자: ${formatKRW(monthly)}`;
+      table.innerHTML = `<table><tbody>
+        <tr><th scope="row">총 이자(${n}개월)</th><td>${formatKRW(totalInt)}</td></tr>
+        <tr><th scope="row">총 상환액</th><td>${formatKRW(a + totalInt)}</td></tr>
+        ${compare}
+      </tbody></table>`;
+    };
+    [amount, rate, rent].forEach((el) => el?.addEventListener("input", render));
+    term?.addEventListener("change", render);
+    render();
+  }
+</script>

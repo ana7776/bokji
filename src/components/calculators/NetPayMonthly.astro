@@ -1,0 +1,46 @@
+<section class="section bkc" id="c-npm">
+  <h2>월급 실수령액 계산</h2>
+  <p class="bkc-basis">2026년 기준 · 국민연금 4.75% · 건강보험 3.595% · 장기요양 0.9448% · 고용보험 0.9% · 소득세는 간이세액표 산식 근사</p>
+  <div class="bkc-grid">
+    <label>월 급여(세전, 원)<input id="npm-salary" type="number" inputmode="numeric" min="0" step="10000" value="3000000" /></label>
+    <label>비과세액(월, 원)<input id="npm-taxfree" type="number" inputmode="numeric" min="0" step="10000" value="200000" /></label>
+    <label>공제대상 가족 수(본인 포함)
+      <select id="npm-family"><option value="1" selected>1명</option><option value="2">2명</option><option value="3">3명</option><option value="4">4명</option><option value="5">5명</option><option value="6">6명</option></select>
+    </label>
+    <label>8세 이상 20세 이하 자녀 수
+      <select id="npm-child"><option value="0" selected>없음</option><option value="1">1명</option><option value="2">2명</option><option value="3">3명</option></select>
+    </label>
+  </div>
+  <output id="npm-result" aria-live="polite">입력값을 기준으로 예상 실수령액을 표시합니다.</output>
+  <div class="bkc-table" id="npm-table"></div>
+  <p class="bkc-note">비과세액 기본값은 식대 한도(월 20만 원)입니다. 소득세는 간이세액표 100% 기준 근사치로, 회사가 80%·120% 비율을 선택했거나 표 구간 경계에 있으면 실제 원천징수액과 수천 원 차이가 날 수 있으며 연말정산에서 정산됩니다.</p>
+  <p class="bkc-warning">본 계산기는 실제 심사 결과와 다를 수 있습니다.</p>
+</section>
+<script>
+  import { netPayBreakdown, formatKRW } from "@/lib/calc2026";
+  const root = document.getElementById("c-npm");
+  if (root) {
+    const g = (id: string) => document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null;
+    const salary = g("npm-salary"), taxfree = g("npm-taxfree"), family = g("npm-family"), child = g("npm-child");
+    const result = document.getElementById("npm-result");
+    const table = document.getElementById("npm-table");
+    const render = () => {
+      const s = Number(salary?.value || 0);
+      if (!result || !table) return;
+      if (s <= 0) { result.textContent = "월 급여를 입력해 주세요."; table.innerHTML = ""; return; }
+      const b = netPayBreakdown(s, Number(taxfree?.value || 0), Number(family?.value || 1), Number(child?.value || 0));
+      result.textContent = `월 예상 실수령액: ${formatKRW(b.net)}`;
+      table.innerHTML = `<table><tbody>
+        <tr><th scope="row">국민연금 (4.75%)</th><td>${formatKRW(b.pension)}</td></tr>
+        <tr><th scope="row">건강보험 (3.595%)</th><td>${formatKRW(b.health)}</td></tr>
+        <tr><th scope="row">장기요양보험</th><td>${formatKRW(b.ltc)}</td></tr>
+        <tr><th scope="row">고용보험 (0.9%)</th><td>${formatKRW(b.employment)}</td></tr>
+        <tr><th scope="row">소득세(근사)</th><td>${formatKRW(b.incomeTax)}</td></tr>
+        <tr><th scope="row">지방소득세</th><td>${formatKRW(b.localTax)}</td></tr>
+        <tr><th scope="row"><strong>공제 합계</strong></th><td><strong>${formatKRW(b.totalDeduction)}</strong></td></tr>
+      </tbody></table>`;
+    };
+    [salary, taxfree, family, child].forEach((el) => el?.addEventListener(el instanceof HTMLSelectElement ? "change" : "input", render));
+    render();
+  }
+</script>

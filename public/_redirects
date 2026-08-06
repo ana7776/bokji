@@ -1,16 +1,4 @@
-# Retired pages
-/upload /contact 301
-/upload/ /contact 301
-/category/funny /category/funny/ 301
-/category/empathy /category/empathy/ 301
-/funny /category/funny/ 301
-/funny/ /category/funny/ 301
-/empathy /category/empathy/ 301
-/empathy/ /category/empathy/ 301
-/?category=funny /category/funny/ 301
-/?category=empathy /category/empathy/ 301
-/?category=all / 301
-/index.html / 301
-
-# Canonical host
-https://www.sosotime.com/* https://sosotime.com/:splat 301
+https://www.bokjicheck.co.kr/* https://bokjicheck.co.kr/:splat 301
+/privacy-policy /privacy/ 301
+/privacy-policy/ /privacy/ 301
+/sitemap.xml /sitemap-index.xml 200

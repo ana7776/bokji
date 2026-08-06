@@ -1,3 +1,6 @@
+User-agent: *
+Allow: /
+
 User-agent: Googlebot
 Allow: /
 
@@ -7,10 +10,7 @@ Allow: /
 User-agent: Mediapartners-Google
 Allow: /
 
-User-agent: AdsBot-Google
+User-agent: Google-Display-Ads-Bot
 Allow: /
 
-User-agent: *
-Allow: /
-
-Sitemap: https://sosotime.com/sitemap.xml
+Sitemap: https://bokjicheck.co.kr/sitemap-index.xml

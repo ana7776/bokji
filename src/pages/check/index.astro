@@ -1,0 +1,113 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import CheckCard from "@/components/CheckCard.astro";
+import { checkItems, uniqueCategories } from "@/lib/items";
+
+const categories = uniqueCategories();
+---
+
+<BaseLayout
+  title="복지 체크도구 전체 목록 | 복지체크"
+  description="소득, 재산, 주거비, 생활비 기준으로 복지 신청 전 확인할 수 있는 2026년 계산기와 체크도구 전체 목록입니다."
+  canonicalPath="/check/"
+>
+  <section class="page-hero">
+    <p class="eyebrow">calculator directory</p>
+    <h1>복지 신청 전 확인할 계산기를 한곳에 모았습니다</h1>
+    <p class="lead">
+      월 소득, 세금, 금융재산, 대출이자, 주거비처럼 신청 전에 자주 막히는 기준을 항목별로 빠르게 확인하세요.
+    </p>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">category</p>
+        <h2>카테고리로 찾기</h2>
+      </div>
+    </div>
+    <div class="chips">
+      {categories.map((category) => (
+        <a href={`/check/${category.category}/`}>
+          <strong>{category.label}</strong>
+          <span>{category.count}개</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">all tools</p>
+        <h2>전체 체크도구</h2>
+      </div>
+      <span>{checkItems.length}개</span>
+    </div>
+    <div class="grid">
+      {checkItems.map((item) => <CheckCard item={item} />)}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero {
+    display: grid;
+    gap: 0.9rem;
+    border: 1px solid #d8e2eb;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 2rem;
+  }
+
+  .eyebrow {
+    margin: 0;
+    color: #2563eb;
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-head h2 {
+    margin: 0;
+  }
+
+  .section-head span {
+    color: #647184;
+    font-weight: 900;
+  }
+
+  .chips {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 0.7rem;
+  }
+
+  .chips a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+    border: 1px solid #c8d8f2;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 0.85rem 1rem;
+    color: #172033;
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  .chips span {
+    color: #1d4ed8;
+    font-size: 0.9rem;
+  }
+</style>

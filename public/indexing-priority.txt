@@ -1,0 +1,138 @@
+복지체크 색인 신청 우선순위
+작성일: 2026-07-01
+
+1. 가장 먼저 제출할 사이트맵
+
+Google Search Console > Sitemaps
+Naver Search Advisor > 사이트맵 제출
+
+https://bokjicheck.co.kr/sitemap.xml
+
+내부 실제 sitemap 파일:
+https://bokjicheck.co.kr/sitemap-index.xml
+https://bokjicheck.co.kr/sitemap-0.xml
+
+2. URL 검사 > 색인 생성 요청 1순위
+
+[필수 신뢰 페이지]
+https://bokjicheck.co.kr/
+https://bokjicheck.co.kr/about/
+https://bokjicheck.co.kr/contact/
+https://bokjicheck.co.kr/privacy/
+https://bokjicheck.co.kr/editorial-policy/
+https://bokjicheck.co.kr/sources/
+
+[핵심 허브 페이지]
+https://bokjicheck.co.kr/check/
+https://bokjicheck.co.kr/info/
+https://bokjicheck.co.kr/check/welfare/
+https://bokjicheck.co.kr/check/income/
+https://bokjicheck.co.kr/check/housing/
+https://bokjicheck.co.kr/check/living-cost/
+https://bokjicheck.co.kr/check/asset/
+https://bokjicheck.co.kr/check/tax/
+
+3. URL 검사 > 색인 생성 요청 2순위
+
+[AdSense 심사와 검색 유입용 핵심 정보글]
+https://bokjicheck.co.kr/info/bokjiro-simulation-before-apply/
+https://bokjicheck.co.kr/info/welfare-public-data-source-guide/
+https://bokjicheck.co.kr/info/local-welfare-search-guide/
+https://bokjicheck.co.kr/info/local-welfare-public-data-check/
+https://bokjicheck.co.kr/info/welfare-income-standard-2026/
+https://bokjicheck.co.kr/info/basic-livelihood-income-recognition/
+https://bokjicheck.co.kr/info/basic-livelihood-benefit-threshold-2026/
+https://bokjicheck.co.kr/info/basic-livelihood-benefit-simulation-2026/
+https://bokjicheck.co.kr/info/basic-livelihood-car-property-check/
+https://bokjicheck.co.kr/info/basic-pension-income-check-2026/
+https://bokjicheck.co.kr/info/basic-pension-official-simulation-guide/
+https://bokjicheck.co.kr/info/housing-benefit-standard-rent-2026/
+https://bokjicheck.co.kr/info/housing-benefit-cost-check/
+https://bokjicheck.co.kr/info/medical-benefit-family-support/
+https://bokjicheck.co.kr/info/disability-welfare-resource-check/
+https://bokjicheck.co.kr/info/welfare-documents-checklist/
+https://bokjicheck.co.kr/info/freelancer-welfare-income/
+https://bokjicheck.co.kr/info/financial-asset-standard/
+https://bokjicheck.co.kr/info/debt-and-welfare-check/
+https://bokjicheck.co.kr/info/health-insurance-premium-check/
+https://bokjicheck.co.kr/info/household-member-standard/
+
+4. URL 검사 > 색인 생성 요청 3순위
+
+[대표 계산기 페이지]
+https://bokjicheck.co.kr/check/welfare/basic-livelihood/median-income-threshold/
+https://bokjicheck.co.kr/check/welfare/basic-livelihood/basic-livelihood-income-simulator/
+https://bokjicheck.co.kr/check/welfare/basic-livelihood/basic-livelihood-benefit-estimator/
+https://bokjicheck.co.kr/check/welfare/pension/basic-pension-income-simulator/
+https://bokjicheck.co.kr/check/income/earned-income/monthly-salary-net-pay/
+https://bokjicheck.co.kr/check/income/earned-income/annual-salary-net-pay/
+https://bokjicheck.co.kr/check/income/retirement/severance-pay/
+https://bokjicheck.co.kr/check/income/retirement/unemployment-benefit/
+https://bokjicheck.co.kr/check/income/deduction/social-insurance/
+https://bokjicheck.co.kr/check/income/freelance/freelancer-tax-3-3/
+https://bokjicheck.co.kr/check/living-cost/debt/loan-interest/
+https://bokjicheck.co.kr/check/living-cost/utility/electricity-bill/
+https://bokjicheck.co.kr/check/housing/housing-cost/jeonse-loan-interest/
+https://bokjicheck.co.kr/check/housing/housing-cost/brokerage-fee/
+https://bokjicheck.co.kr/check/housing/housing-info/area-converter/
+
+5. URL 검사 > 색인 생성 요청 4순위
+
+[생활비·근로·세금 정보글]
+https://bokjicheck.co.kr/info/disposable-income-guide/
+https://bokjicheck.co.kr/info/emergency-welfare-before-apply/
+https://bokjicheck.co.kr/info/minimum-wage-and-welfare/
+https://bokjicheck.co.kr/info/retirement-income-gap/
+https://bokjicheck.co.kr/info/self-employed-vat-income/
+https://bokjicheck.co.kr/info/telecom-cost-saving/
+https://bokjicheck.co.kr/info/utility-cost-welfare/
+https://bokjicheck.co.kr/info/work-incentive-income-check/
+https://bokjicheck.co.kr/info/youth-welfare-income-check/
+https://bokjicheck.co.kr/info/annual-leave-final-pay/
+https://bokjicheck.co.kr/info/area-size-housing-support/
+https://bokjicheck.co.kr/info/median-income-basic/
+https://bokjicheck.co.kr/info/moving-cost-check/
+
+6. 나머지 계산기와 카테고리 페이지
+
+아래 주소들은 sitemap 제출 후 자동 발견을 우선합니다. 필요할 때만 수동 요청합니다.
+
+https://bokjicheck.co.kr/check/asset/financial-asset/
+https://bokjicheck.co.kr/check/asset/financial-asset/deposit-interest/
+https://bokjicheck.co.kr/check/asset/financial-asset/installment-savings-interest/
+https://bokjicheck.co.kr/check/housing/housing-cost/
+https://bokjicheck.co.kr/check/housing/housing-info/
+https://bokjicheck.co.kr/check/housing/property/
+https://bokjicheck.co.kr/check/housing/property/acquisition-tax/
+https://bokjicheck.co.kr/check/income/allowance/
+https://bokjicheck.co.kr/check/income/allowance/annual-leave-pay/
+https://bokjicheck.co.kr/check/income/deduction/
+https://bokjicheck.co.kr/check/income/earned-income/
+https://bokjicheck.co.kr/check/income/freelance/
+https://bokjicheck.co.kr/check/income/freelance/freelancer-tax-3-3/
+https://bokjicheck.co.kr/check/income/part-time/
+https://bokjicheck.co.kr/check/income/part-time/minimum-wage-monthly/
+https://bokjicheck.co.kr/check/income/part-time/weekly-holiday-pay/
+https://bokjicheck.co.kr/check/income/retirement/
+https://bokjicheck.co.kr/check/living-cost/debt/
+https://bokjicheck.co.kr/check/living-cost/telecom/
+https://bokjicheck.co.kr/check/living-cost/telecom/telecom-savings/
+https://bokjicheck.co.kr/check/living-cost/utility/
+https://bokjicheck.co.kr/check/tax/business/
+https://bokjicheck.co.kr/check/tax/business/vat/
+https://bokjicheck.co.kr/check/tax/income-tax/
+https://bokjicheck.co.kr/check/tax/income-tax/global-income-tax-simple/
+https://bokjicheck.co.kr/check/welfare/basic-livelihood/
+https://bokjicheck.co.kr/check/welfare/pension/
+
+7. 색인 확인용 검색어
+
+site:bokjicheck.co.kr
+site:bokjicheck.co.kr/info/
+site:bokjicheck.co.kr/check/
+
+8. 운영 메모
+
+- Search Console URL 검사에서 색인 생성 요청은 하루 요청량이 제한될 수 있으므로 1순위부터 나눠 요청합니다.
+- sitemap 제출 후에는 전체 URL을 매번 수동 요청하지 않아도 됩니다.
+- 새 글을 발행하거나 중요한 글을 크게 수정한 경우 해당 URL만 추가로 요청합니다.

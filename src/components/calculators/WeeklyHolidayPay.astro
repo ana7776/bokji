@@ -1,0 +1,40 @@
+<section class="section bkc" id="c-wh">
+  <h2>주휴수당 계산</h2>
+  <p class="bkc-basis">주휴수당 = 시급 × 8시간 × (주 소정근로시간 ÷ 40) · 주 15시간 이상 개근 시 지급</p>
+  <div class="bkc-grid">
+    <label>시급(원)<input id="wh-hourly" type="number" inputmode="numeric" min="0" step="10" value="10320" /></label>
+    <label>주 소정근로시간(시간)<input id="wh-hours" type="number" inputmode="decimal" min="0" max="40" step="0.5" value="20" /></label>
+  </div>
+  <output id="wh-result" aria-live="polite">입력값을 기준으로 주휴수당을 표시합니다.</output>
+  <div class="bkc-table" id="wh-table"></div>
+  <p class="bkc-note">2026년 최저시급은 10,320원입니다. 주 소정근로시간이 15시간 미만이면 주휴수당 지급 대상이 아니고, 40시간을 넘어도 40시간 기준으로 계산합니다. 소정근로일을 개근해야 그 주의 주휴수당이 발생합니다.</p>
+  <p class="bkc-warning">본 계산기는 실제 심사 결과와 다를 수 있습니다.</p>
+</section>
+<script>
+  import { formatKRW } from "@/lib/calc2026";
+  const root = document.getElementById("c-wh");
+  if (root) {
+    const hourly = document.getElementById("wh-hourly") as HTMLInputElement | null;
+    const hours = document.getElementById("wh-hours") as HTMLInputElement | null;
+    const result = document.getElementById("wh-result");
+    const table = document.getElementById("wh-table");
+    const render = () => {
+      if (!result || !table) return;
+      const h = Number(hourly?.value || 0);
+      const t = Math.min(Number(hours?.value || 0), 40);
+      if (h <= 0 || t <= 0) { result.textContent = "시급과 주 소정근로시간을 입력해 주세요."; table.innerHTML = ""; return; }
+      if (t < 15) { result.textContent = "주 15시간 미만 근무는 주휴수당 지급 대상이 아닙니다."; table.innerHTML = ""; return; }
+      const weekly = h * 8 * (t / 40);
+      const basePay = h * t;
+      result.textContent = `주휴수당: ${formatKRW(weekly)} / 주`;
+      table.innerHTML = `<table><tbody>
+        <tr><th scope="row">주급(근로시간분)</th><td>${formatKRW(basePay)}</td></tr>
+        <tr><th scope="row">주휴수당</th><td>${formatKRW(weekly)}</td></tr>
+        <tr><th scope="row">주급 합계</th><td>${formatKRW(basePay + weekly)}</td></tr>
+        <tr><th scope="row">월 환산(4.345주)</th><td>${formatKRW((basePay + weekly) * 4.345)}</td></tr>
+      </tbody></table>`;
+    };
+    [hourly, hours].forEach((el) => el?.addEventListener("input", render));
+    render();
+  }
+</script>

@@ -1,0 +1,50 @@
+<section class="section bkc" id="c-sv">
+  <h2>퇴직금 계산</h2>
+  <p class="bkc-basis">퇴직금 = 1일 평균임금 × 30일 × (재직일수 ÷ 365) · 고용노동부 산정 방식</p>
+  <div class="bkc-grid">
+    <label>입사일<input id="sv-start" type="date" value="2023-01-02" /></label>
+    <label>퇴사일(마지막 근무 다음 날)<input id="sv-end" type="date" value="2026-07-01" /></label>
+    <label>퇴직 전 3개월 임금 총액(원)<input id="sv-wage3m" type="number" inputmode="numeric" min="0" step="100000" value="9000000" /></label>
+    <label>연간 상여금 총액(원)<input id="sv-bonus" type="number" inputmode="numeric" min="0" step="100000" value="0" /></label>
+    <label>연차수당(퇴직 전 1년분, 원)<input id="sv-leave" type="number" inputmode="numeric" min="0" step="10000" value="0" /></label>
+  </div>
+  <output id="sv-result" aria-live="polite">입력값을 기준으로 예상 퇴직금을 표시합니다.</output>
+  <div class="bkc-table" id="sv-table"></div>
+  <p class="bkc-note">상여금과 연차수당은 연간 지급액의 3/12만 평균임금에 반영합니다. 1년 미만 근무하거나 4주 평균 주 15시간 미만이면 퇴직금 지급 대상이 아닙니다. 평균임금이 통상임금보다 낮으면 통상임금으로 계산하므로 실제 금액은 더 클 수 있습니다.</p>
+  <p class="bkc-warning">본 계산기는 실제 심사 결과와 다를 수 있습니다.</p>
+</section>
+<script>
+  import { formatKRW } from "@/lib/calc2026";
+  const root = document.getElementById("c-sv");
+  if (root) {
+    const g = (id: string) => document.getElementById(id) as HTMLInputElement | null;
+    const start = g("sv-start"), end = g("sv-end"), wage3m = g("sv-wage3m"), bonus = g("sv-bonus"), leave = g("sv-leave");
+    const result = document.getElementById("sv-result");
+    const table = document.getElementById("sv-table");
+    const DAY = 86_400_000;
+    const render = () => {
+      if (!result || !table) return;
+      const s = start?.value ? new Date(start.value) : null;
+      const e = end?.value ? new Date(end.value) : null;
+      const w = Number(wage3m?.value || 0);
+      if (!s || !e || w <= 0 || e <= s) { result.textContent = "입사일·퇴사일과 3개월 임금 총액을 입력해 주세요."; table.innerHTML = ""; return; }
+      const tenureDays = Math.round((e.getTime() - s.getTime()) / DAY);
+      if (tenureDays < 365) { result.textContent = "재직기간이 1년 미만이면 법정 퇴직금 지급 대상이 아닙니다."; table.innerHTML = ""; return; }
+      const threeMonthsAgo = new Date(e.getTime());
+      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+      const periodDays = Math.round((e.getTime() - threeMonthsAgo.getTime()) / DAY);
+      const included = w + Number(bonus?.value || 0) * 3 / 12 + Number(leave?.value || 0) * 3 / 12;
+      const avgDaily = included / periodDays;
+      const severance = avgDaily * 30 * (tenureDays / 365);
+      result.textContent = `예상 퇴직금: ${formatKRW(severance)}`;
+      table.innerHTML = `<table><tbody>
+        <tr><th scope="row">재직일수</th><td>${tenureDays.toLocaleString("ko-KR")}일 (약 ${(tenureDays / 365).toFixed(1)}년)</td></tr>
+        <tr><th scope="row">산정 기간</th><td>퇴직 전 ${periodDays}일</td></tr>
+        <tr><th scope="row">평균임금 산입액</th><td>${formatKRW(included)}</td></tr>
+        <tr><th scope="row">1일 평균임금</th><td>${formatKRW(avgDaily)}</td></tr>
+      </tbody></table>`;
+    };
+    [start, end, wage3m, bonus, leave].forEach((el) => el?.addEventListener("input", render));
+    render();
+  }
+</script>

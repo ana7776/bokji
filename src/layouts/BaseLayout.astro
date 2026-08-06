@@ -1,0 +1,356 @@
+---
+import { navItems, siteConfig } from "@/config/site";
+import { absoluteUrl } from "@/lib/items";
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const title = Astro.props.title ?? siteConfig.defaultTitle;
+const description = Astro.props.description ?? siteConfig.defaultDescription;
+const canonical = absoluteUrl(Astro.props.canonicalPath ?? Astro.url.pathname);
+const hasAdSensePublisherId = /^ca-pub-\d+$/.test(siteConfig.adsenseClientId) && !/^ca-pub-0+$/.test(siteConfig.adsenseClientId);
+const baseJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: siteConfig.name,
+    alternateName: "복지체크 운영팀",
+    url: siteConfig.domain,
+    email: siteConfig.contactEmail,
+    telephone: siteConfig.contactPhone,
+    areaServed: "KR",
+    knowsAbout: ["복지 제도", "소득 기준", "재산 기준", "생활비 계산", "공공 복지서비스"],
+    founder: {
+      "@type": "Person",
+      name: siteConfig.operatorName,
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: siteConfig.contactEmail,
+      telephone: siteConfig.contactPhone,
+      contactType: "customer support",
+      availableLanguage: "ko",
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: siteConfig.domain,
+    inLanguage: "ko-KR",
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.publisher,
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${siteConfig.domain}/check/?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  },
+];
+const extraJsonLd = Astro.props.jsonLd
+  ? Array.isArray(Astro.props.jsonLd)
+    ? Astro.props.jsonLd
+    : [Astro.props.jsonLd]
+  : [];
+const jsonLd = JSON.stringify([...baseJsonLd, ...extraJsonLd]).replace(/<\/script/gi, "<\\/script");
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="naver-site-verification" content="85950a2972e7bc3c943421482ea1e3b5fe3e4cbb" />
+    {hasAdSensePublisherId && <meta name="google-adsense-account" content={siteConfig.adsenseClientId} />}
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={siteConfig.locale} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline type="application/ld+json" set:html={jsonLd} />
+    {
+      hasAdSensePublisherId && (
+        <script
+          is:inline
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${siteConfig.adsenseClientId}`}
+          crossorigin="anonymous"
+        />
+      )
+    }
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/">
+        <span class="brand-primary">복지</span>
+        <span class="brand-divider"></span>
+        <span class="brand-check">CHECK</span>
+      </a>
+      <nav aria-label="주요 메뉴">
+        {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+      <a class="header-search" href="/check/" aria-label="복지서비스 검색">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="m21 21-4.35-4.35m2.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" />
+        </svg>
+      </a>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>
+        복지체크는 신청 전 참고용 계산 정보를 제공합니다. 실제 자격, 금액, 접수 가능 여부는 각 기관의 최신 공고와 공식 기준으로 확인하세요.
+      </p>
+      <nav class="footer-links" aria-label="하단 메뉴">
+        <a href="/about/">사이트 소개</a>
+        <a href="/editorial-policy/">편집·검수 기준</a>
+        <a href="/sources/">공식 출처</a>
+        <a href="/contact/">문의</a>
+        <a href="/privacy/">개인정보처리방침</a>
+        <a href="/check/">체크도구</a>
+        <a href="/info/">복지 가이드</a>
+      </nav>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    color: #152033;
+    background: #f6f8fb;
+    font-family:
+      Pretendard, "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+    line-height: 1.5;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: #ffffff;
+  }
+
+  a {
+    color: #1d4ed8;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2rem;
+    border-bottom: 1px solid #dfe7f2;
+    background: rgba(255, 255, 255, 0.96);
+    padding: 1rem max(1.5rem, calc((100vw - 1320px) / 2));
+    backdrop-filter: blur(16px);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    color: #10234c;
+    font-size: 1.55rem;
+    font-weight: 900;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .brand-primary {
+    color: #1559d1;
+  }
+
+  .brand-divider {
+    width: 2px;
+    height: 1.45rem;
+    margin: 0 0.18rem 0 0.26rem;
+    background: #1559d1;
+  }
+
+  .brand-check {
+    position: relative;
+  }
+
+  .brand-check::after {
+    position: absolute;
+    right: -0.52rem;
+    top: -0.68rem;
+    width: 0.55rem;
+    height: 1.3rem;
+    border-right: 5px solid #1559d1;
+    border-bottom: 5px solid #1559d1;
+    content: "";
+    transform: rotate(42deg);
+    transform-origin: center;
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: clamp(1rem, 3.4vw, 4rem);
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    color: #111827;
+    font-size: 1rem;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  nav a:hover {
+    color: #1d4ed8;
+  }
+
+  .header-search {
+    display: grid;
+    width: 2.8rem;
+    height: 2.8rem;
+    place-items: center;
+    border: 1px solid #d1dbe9;
+    border-radius: 999px;
+    color: #0f1d36;
+    text-decoration: none;
+  }
+
+  .header-search svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.4;
+  }
+
+  main {
+    max-width: none;
+    margin: 0 auto;
+    padding: 0 0 4.5rem;
+  }
+
+  h1 {
+    margin: 0;
+    max-width: 780px;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1.15;
+    letter-spacing: 0;
+  }
+
+  h2 {
+    margin: 0 0 1rem;
+    font-size: 1.55rem;
+    letter-spacing: 0;
+  }
+
+  p {
+    word-break: keep-all;
+  }
+
+  .lead {
+    max-width: 760px;
+    color: #4f6075;
+    font-size: 1.08rem;
+    line-height: 1.75;
+  }
+
+  .section {
+    margin-top: 3rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .content {
+    display: grid;
+    gap: 1.1rem;
+    max-width: 780px;
+    color: #29374a;
+    font-size: 1.02rem;
+    line-height: 1.85;
+  }
+
+  .content h2 {
+    margin-top: 2rem;
+  }
+
+  .content table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+  }
+
+  .content th,
+  .content td {
+    border: 1px solid #dce3eb;
+    padding: 0.8rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .site-footer {
+    border-top: 1px solid #dde5ee;
+    background: #ffffff;
+    color: #647184;
+  }
+
+  .site-footer p {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 1.25rem 1.25rem 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 1rem;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 1.25rem 1.25rem;
+  }
+
+  .footer-links a {
+    color: #4f6075;
+    font-size: 0.88rem;
+  }
+
+  @media (max-width: 720px) {
+    .site-header {
+      grid-template-columns: 1fr auto;
+      gap: 0.75rem;
+      position: static;
+    }
+
+    .site-header nav {
+      grid-column: 1 / -1;
+      justify-content: flex-start;
+      gap: 0.8rem 1.1rem;
+    }
+
+    nav a {
+      font-size: 0.92rem;
+    }
+  }
+</style>
