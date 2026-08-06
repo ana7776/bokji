@@ -12,7 +12,7 @@ const categoryEntries = Object.entries(categoryLabels)
   .map(([category, label]) => ({ category, label, count: posts.filter((post) => post.category === category).length }))
   .filter((entry) => entry.count > 0);
 const adsenseClient = process.env.ADSENSE_CLIENT || "ca-pub-5804969457082424";
-const authorName = "김안나";
+const authorName = "김애나";
 
 await rm("public/posts", { recursive: true, force: true });
 
@@ -49,7 +49,7 @@ function renderPost(post) {
         author: {
           "@type": "Person",
           name: authorName,
-          url: `${siteUrl}/about`
+          url: `${siteUrl}/author`
         },
         publisher: {
           "@type": "Organization",
@@ -71,7 +71,7 @@ function renderPost(post) {
             "@type": "ListItem",
             position: 2,
             name: categoryLabel,
-            item: `${siteUrl}/?category=${post.category}`
+            item: `${siteUrl}/category/${post.category}/`
           },
           {
             "@type": "ListItem",
@@ -94,6 +94,7 @@ function renderPost(post) {
     <meta name="author" content="${escapeHtml(authorName)}" />
     <meta name="robots" content="index,follow,max-image-preview:large" />
     <link rel="canonical" href="${canonical}" />
+    <link rel="alternate" type="application/rss+xml" title="SOSO TIME RSS" href="/rss.xml" />
     <link rel="stylesheet" href="/styles.css" />
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="소소타임" />
@@ -119,14 +120,14 @@ function renderPost(post) {
         <nav class="breadcrumb" aria-label="현재 위치">
           <a href="/">홈</a>
           <span>›</span>
-          <a href="/?category=${post.category}">${escapeHtml(categoryLabel)}</a>
+          <a href="/category/${post.category}/">${escapeHtml(categoryLabel)}</a>
         </nav>
         <header class="article-header">
           <p class="eyebrow">${escapeHtml(categoryLabel)}</p>
           <h1>${escapeHtml(post.title)}</h1>
           <p class="article-description">${escapeHtml(post.summary)}</p>
           <dl class="article-meta">
-            <div><dt>글</dt><dd>${escapeHtml(authorName)}</dd></div>
+            <div><dt>글</dt><dd><a href="/author">${escapeHtml(authorName)}</a></dd></div>
             <div><dt>발행</dt><dd><time datetime="${post.publishedAt}">${formatDate(post.publishedAt)}</time></dd></div>
             <div><dt>분류</dt><dd>${escapeHtml(categoryLabel)}</dd></div>
           </dl>
@@ -143,7 +144,7 @@ function renderPost(post) {
         </section>
 
         <section class="author-note" aria-label="글쓴이">
-          <p><strong>${escapeHtml(authorName)}</strong> · 직접 쓴 공감 상황극과 유머 썰을 올립니다. 글에 대한 의견이나 수정 요청은 <a href="/contact">문의하기</a>로 보내 주세요.</p>
+          <p><strong>${escapeHtml(authorName)}</strong> · 직접 기획하고 작성한 공감 상황극과 유머 글을 올립니다. 글에 대한 의견이나 수정 요청은 <a href="/contact">문의하기</a>로 보내 주세요.</p>
         </section>
 
         <section class="related-posts" aria-labelledby="related-title">
@@ -194,7 +195,7 @@ function siteHeader() {
           </span>
         </a>
         <nav class="top-nav" aria-label="주요 분류">
-          ${categoryEntries.map(({ category, label }) => `<a class="nav-tab" href="/?category=${category}">${label}</a>`).join("\n          ")}
+          ${categoryEntries.map(({ category, label }) => `<a class="nav-tab" href="/category/${category}/">${label}</a>`).join("\n          ")}
         </nav>
       </div>
     </header>`;
@@ -203,7 +204,9 @@ function siteHeader() {
 function siteFooter() {
   return `<footer class="site-footer">
       <a href="/about">사이트 소개</a>
+      <a href="/author">저자</a>
       <a href="/policy/editorial">작성 원칙</a>
+      <a href="/rss.xml">RSS</a>
       <a href="/report">수정·삭제 요청</a>
       <a href="/policy/privacy">개인정보처리방침</a>
       <a href="/contact">문의하기</a>

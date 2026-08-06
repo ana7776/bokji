@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/dev-server.js",
-    "build": "node scripts/generate-post-images.js && node scripts/generate-index-page.js && node scripts/generate-post-pages.js && node scripts/generate-sitemap.js",
+    "build": "node scripts/generate-post-images.js && node scripts/generate-index-page.js && node scripts/generate-post-pages.js && node scripts/generate-taxonomy-pages.js && node scripts/generate-static-pages.js && node scripts/generate-rss.js && node scripts/generate-sitemap.js",
     "image:generate": "node scripts/generate-post-images.js",
     "image:fetch": "node scripts/fetch-r2-image.js",
     "image:upload": "node scripts/upload-r2-image.js"

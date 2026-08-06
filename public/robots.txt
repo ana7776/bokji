@@ -1,6 +1,5 @@
 User-agent: Googlebot
 Allow: /
-Disallow: /*?
 
 User-agent: Googlebot-Image
 Allow: /
@@ -13,6 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
-Disallow: /*?
 
 Sitemap: https://sosotime.com/sitemap.xml

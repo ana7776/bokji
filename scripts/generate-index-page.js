@@ -73,6 +73,7 @@ const html = `<!doctype html>
     <meta name="naver-site-verification" content="39233df2c0bc4eae9016d16a8866f9f7131b6b60" />
     <link rel="canonical" href="${siteUrl}/" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="alternate" type="application/rss+xml" title="SOSO TIME RSS" href="/rss.xml" />
     <link rel="stylesheet" href="/styles.css" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="소소타임" />
@@ -197,7 +198,7 @@ await writeFile("public/index.html", html, "utf8");
 console.log(`Generated blog index page with ${posts.length} posts`);
 
 function renderNavTab(entry) {
-  return `<a class="nav-tab" href="/?category=${entry.category}" data-filter="${entry.category}">${escapeHtml(entry.label)}</a>`;
+  return `<a class="nav-tab" href="/category/${entry.category}/" data-filter="${entry.category}">${escapeHtml(entry.label)}</a>`;
 }
 
 function renderStoryCard(post) {
@@ -216,7 +217,7 @@ function renderCategoryColumn(entry) {
   return `<article class="category-column ${entry.tone}">
                 <div class="category-column-head">
                   <h3><span>${escapeHtml(entry.icon)}</span>${escapeHtml(entry.label)}</h3>
-                  <a href="/?category=${entry.category}" class="nav-tab" data-filter="${entry.category}">더보기</a>
+                  <a href="/category/${entry.category}/" class="nav-tab" data-filter="${entry.category}">더보기</a>
                 </div>
                 <p>${escapeHtml(entry.description)}</p>
                 <ol>
@@ -271,7 +272,7 @@ function renderTagCloud() {
   const tags = [...new Set(posts.flatMap((post) => post.tags || []))]
     .filter(Boolean)
     .slice(0, 12);
-  return tags.map((tag) => `<a href="/?q=${encodeURIComponent(tag)}">#${escapeHtml(tag)}</a>`).join("\n              ");
+  return tags.map((tag) => `<a href="/tags/${slugifyTag(tag)}/">#${escapeHtml(tag)}</a>`).join("\n              ");
 }
 
 function getCategory(post) {
@@ -284,6 +285,11 @@ function formatDate(value) {
 
 function safeJson(value) {
   return JSON.stringify(value).replaceAll("<", "\\u003c");
+}
+
+function slugifyTag(tag) {
+  const ascii = tag.toLowerCase().replace(/[^a-z0-9가-힣]+/g, "-").replace(/^-|-$/g, "");
+  return encodeURIComponent(ascii || tag);
 }
 
 function escapeHtml(value) {
