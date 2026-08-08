@@ -2,6 +2,7 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import CheckCard from "@/components/CheckCard.astro";
 import { checkItems } from "@/lib/items";
+import { subCategoryGuides } from "@/data/subcategory-guides";
 
 export function getStaticPaths() {
   const paths = new Set(checkItems.map((item) => `${item.category}/${item.subCategory}`));
@@ -14,6 +15,7 @@ export function getStaticPaths() {
 const { category, subCategory } = Astro.params;
 const items = checkItems.filter((item) => item.category === category && item.subCategory === subCategory);
 const label = items[0]?.subCategoryLabel ?? "세부";
+const guide = subCategoryGuides[`${category}/${subCategory}`];
 ---
 
 <BaseLayout
@@ -23,6 +25,7 @@ const label = items[0]?.subCategoryLabel ?? "세부";
 >
   <h1>{label} 복지 체크도구</h1>
   <p class="lead">신청 전 기준을 이해하기 쉽도록 관련 계산기를 모았습니다.</p>
+  {guide && <p class="guide">{guide}</p>}
   <section class="section" aria-labelledby="subcategory-tools-title">
     <h2 id="subcategory-tools-title">{label} 관련 체크도구</h2>
     <div class="grid">
@@ -30,3 +33,12 @@ const label = items[0]?.subCategoryLabel ?? "세부";
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .guide {
+    max-width: 760px;
+    color: #29374a;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+</style>
