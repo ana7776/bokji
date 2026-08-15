@@ -1,6 +1,6 @@
 # AdSense and SEO Readiness Checklist
 
-Last checked: 2026-07-01
+Last checked: 2026-08-15
 
 ## Current Site Position
 
@@ -15,7 +15,8 @@ Last checked: 2026-07-01
 
 - Clear site topic: welfare application preparation, income standards, assets, housing costs, and living costs.
 - No login, comments, or admin area required for public use.
-- Core trust pages exist: about, contact, privacy policy, editorial policy, and official sources.
+- Core trust pages exist: about, contact, privacy policy, terms of service, editorial policy, and official sources.
+- `/terms/` was added on 2026-08-15 and is linked from the global footer. It is written against the actual service (no sign-up, no payment, no application proxy) rather than copied boilerplate.
 - AdSense publisher ID is configured as `ca-pub-5804969457082424`.
 - `public/ads.txt` is present with the matching publisher account.
 - AdSense ownership signals are available through the global script tag, `ads.txt`, and the `google-adsense-account` meta tag.
@@ -25,8 +26,16 @@ Last checked: 2026-07-01
 - A Cloudflare Pages `_worker.js` redirects `www.bokjicheck.co.kr` to the canonical root domain before assets are served.
 - Calculator pages include disclaimers that results are for reference and must be confirmed with official institutions.
 
+### Resolved on 2026-08-15
+
+- Fixed 26 broken markdown tables across 25 of the 35 guide posts. The delimiter row had two cells against a three-cell header, so GFM refused to parse them and the "신청 전 체크" table rendered as raw `| ... | ... |` text on nearly every guide page. Verified after rebuild: zero raw pipe rows in `dist`, 80 `<table>` elements across the info pages.
+- Added the missing terms of service page required by the operations guide's trust-page list.
+- Added two guide posts for search queries that had impressions but no dedicated page: `housing-property-limit-2026.md` (주거용재산 한도액) and `near-poverty-simulation-guide.md` (차상위계층 모의계산). Both are wired into `reportSeries` reading paths so they are not orphaned.
+
 ### Gaps to Keep Improving
 
+- Impressions collapsed from 55-77/day to 0-2/day after 2026-07-21, overlapping the Cloudflare Pages build-output problem fixed on 2026-08-07. Track recovery over the next few weeks before drawing content conclusions from the numbers.
+- `/check/income/freelance/freelancer-tax-3-3/` holds 49 impressions at average position 35.6 with no clicks, the weakest ranking cluster on the site. Improve through internal links and supporting explanation rather than a new overlapping post.
 - Several early guide posts have been expanded; continue reviewing any post under roughly 800 Korean characters.
 - Every calculator should eventually include official source references, especially salary, loan, housing, and utility calculators.
 - Replace symbolic ad slot names with numeric AdSense slot IDs if manual in-article ad units are created.
