@@ -65,6 +65,15 @@ featured: false
 4. 고급자동차나 회원권이 있다면 별도 항목으로 확인합니다.
 5. 계산 결과가 기준선 근처라면 복지로 또는 국민연금공단 모의계산으로 한 번 더 확인합니다.
 
+## 함께 보면 좋은 자료
+
+| 확인할 내용 | 관련 문서 |
+|---|---|
+| 지역별 기본재산액 공제 | [2026 기초연금 기본재산액](/info/basic-pension-property-deduction-2026/) |
+| 공식 모의계산 순서 | [기초연금 공식 모의계산 확인 순서](/info/basic-pension-official-simulation-guide/) |
+| 예금·적금 등 금융재산 | [복지 재산기준에서 예금과 적금](/info/financial-asset-standard/) |
+| 은퇴 후 소득 공백 | [퇴직금과 실업급여로 보는 소득 공백](/info/retirement-income-gap/) |
+
 ## 공식 확인 경로
 
 기초연금은 신청해야 받을 수 있는 제도입니다. 2026년 선정기준액은 [보건복지부 기초연금 선정기준액 발표](https://www.mohw.go.kr/board.es?act=view&bid=0027&list_no=1488478&mid=a10503010100&nPage=1&tag=0)를 확인하고, 소득인정액 산정 방식은 [보건복지부 기초연금 공식 안내](https://basicpension.mohw.go.kr/menu.es?mid=a10102020000)를 함께 보세요. 실제 신청 전에는 [복지로](https://www.bokjiro.go.kr/) 또는 국민연금공단 상담으로 다시 점검하세요. 2026년에 65세가 되는 1961년생은 생일이 속한 달의 한 달 전부터 신청할 수 있으므로, 신청 전 소득과 재산 자료를 미리 정리해두는 것이 좋습니다.
