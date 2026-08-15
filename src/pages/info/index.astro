@@ -9,6 +9,12 @@ const posts = (await getCollection("info")).sort(
 );
 
 const postBySlug = new Map<string, (typeof posts)[number]>(posts.map((post) => [post.slug, post]));
+
+// 대표 글은 입문 / 실전 / 문제 해결 순으로 역할이 겹치지 않게 노출합니다.
+const roleOrder = ["입문", "실전", "문제 해결"];
+const featuredPosts = posts
+  .filter((post) => post.data.featured && post.data.featuredRole)
+  .sort((a, b) => roleOrder.indexOf(a.data.featuredRole!) - roleOrder.indexOf(b.data.featuredRole!));
 const reports = reportSeries.map((series) => ({
   ...series,
   posts: series.slugs.map((slug) => postBySlug.get(slug)).filter(Boolean),
@@ -70,6 +76,24 @@ const topicGroups = [
 >
   <h1>복지 가이드 전체 목록</h1>
   <p class="lead">신청 자격을 판단하기 전에 알아두면 좋은 기준과 준비사항을 정리했습니다.</p>
+
+  <section class="section featured-list" aria-labelledby="featured-list-title">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">대표 글</p>
+        <h2 id="featured-list-title">역할이 다른 대표 글 3편</h2>
+      </div>
+    </div>
+    <div class="featured-grid">
+      {featuredPosts.map((post) => (
+        <a href={`/info/${post.slug}/`}>
+          <span class="role">{post.data.featuredRole}</span>
+          <strong>{post.data.title}</strong>
+          <span class="note">{post.data.featuredNote}</span>
+        </a>
+      ))}
+    </div>
+  </section>
 
   <section class="section report-list" aria-labelledby="report-list-title">
     <div class="section-head">
@@ -134,6 +158,46 @@ const topicGroups = [
     font-weight: 900;
     letter-spacing: 0;
     text-transform: uppercase;
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 0.85rem;
+  }
+
+  .featured-grid a {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+    border: 1px solid #d8e5f7;
+    border-radius: 8px;
+    background: #f8fbff;
+    padding: 1rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .featured-grid .role {
+    justify-self: start;
+    border-radius: 999px;
+    background: #1d4ed8;
+    padding: 0.16rem 0.6rem;
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 900;
+  }
+
+  .featured-grid strong {
+    color: #172033;
+    font-size: 1.02rem;
+    line-height: 1.45;
+  }
+
+  .featured-grid .note {
+    color: #536174;
+    font-size: 0.92rem;
+    line-height: 1.6;
   }
 
   .report-grid {

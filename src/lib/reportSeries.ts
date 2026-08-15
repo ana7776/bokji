@@ -6,6 +6,7 @@ export const reportSeries = [
     slugs: [
       "median-income-basic",
       "basic-livelihood-income-recognition",
+      "housing-property-limit-2026",
       "basic-livelihood-car-property-check",
       "basic-livelihood-benefit-threshold-2026",
       "basic-livelihood-benefit-simulation-2026",
@@ -42,6 +43,7 @@ export const reportSeries = [
       "복지로 모의계산, 공공데이터, 지역 복지사업, 신청 서류를 연결해 최종 확인 경로를 정리합니다.",
     slugs: [
       "bokjiro-simulation-before-apply",
+      "near-poverty-simulation-guide",
       "welfare-public-data-source-guide",
       "local-welfare-public-data-check",
       "local-welfare-search-guide",
