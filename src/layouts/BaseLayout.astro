@@ -248,6 +248,21 @@ const jsonLd = JSON.stringify([...baseJsonLd, ...extraJsonLd]).replace(/<\/scrip
     padding: 0 0 4.5rem;
   }
 
+  /*
+    홈(.home-shell)은 자체 그리드와 여백을 관리합니다.
+    그 외 페이지는 헤더와 같은 1320px 기준선에 맞추고 좌우 여백을 확보합니다.
+    (이 규칙이 없으면 본문이 화면 왼쪽 끝에 붙어 모바일에서 여백 없이 표시됩니다.)
+  */
+  main > *:not(.home-shell) {
+    max-width: 1320px;
+    margin-inline: auto;
+    padding-inline: clamp(1.15rem, 4vw, 2rem);
+  }
+
+  main > *:not(.home-shell):first-child {
+    padding-top: 1.75rem;
+  }
+
   h1 {
     margin: 0;
     max-width: 780px;

@@ -5,7 +5,7 @@ publishedAt: "2026-06-17"
 updatedAt: "2026-06-30"
 category: "신청준비"
 tags: ["소득기준", "재산기준", "주거비"]
-featured: true
+featured: false
 ---
 
 복지 신청은 제도마다 필요한 서류가 다릅니다. 다만 소득, 재산, 주거, 가족관계 자료는 많은 제도에서 공통적으로 확인됩니다.

@@ -1,0 +1,131 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import { postPath } from "@/lib/info";
+
+const posts = (await getCollection("info")).sort(
+  (a, b) => Date.parse(b.data.updatedAt) - Date.parse(a.data.updatedAt),
+);
+const recent = posts.slice(0, 6);
+
+const shortcuts = [
+  { href: "/check/", label: "체크도구 전체", note: "소득·재산·주거비·세금 계산기를 카테고리로 찾습니다." },
+  { href: "/info/", label: "복지 가이드 전체", note: "신청 전 확인할 기준을 주제별로 정리한 글 목록입니다." },
+  { href: "/sources/", label: "공식 출처", note: "보건복지부, 복지로 등 확인에 사용한 공식 자료입니다." },
+  { href: "/contact/", label: "문의·정정 요청", note: "찾던 내용이 없거나 오류를 발견하면 알려주세요." },
+];
+---
+
+<BaseLayout
+  title="페이지를 찾을 수 없습니다 | 복지체크"
+  description="요청한 주소의 페이지를 찾을 수 없습니다. 복지체크의 체크도구와 복지 가이드에서 필요한 정보를 다시 찾아보세요."
+  canonicalPath="/404/"
+>
+  <article class="notfound">
+    <p class="eyebrow">404 not found</p>
+    <h1>요청하신 페이지를 찾을 수 없습니다</h1>
+    <p class="lead">
+      주소가 바뀌었거나 삭제된 페이지일 수 있습니다. 아래 경로에서 필요한 계산기나 가이드를 다시 찾아보세요.
+    </p>
+
+    <div class="shortcut-grid">
+      {
+        shortcuts.map((item) => (
+          <a href={item.href}>
+            <strong>{item.label}</strong>
+            <span>{item.note}</span>
+          </a>
+        ))
+      }
+    </div>
+
+    <h2>최근 업데이트한 복지 가이드</h2>
+    <ul class="recent-list">
+      {
+        recent.map((post) => (
+          <li>
+            <a href={postPath(post)}>{post.data.title}</a>
+            <small>업데이트 {post.data.updatedAt}</small>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="help">
+      찾으시는 내용이 계속 보이지 않으면 <a href="/contact/">문의 페이지</a>로 알려주세요. 확인 후 반영하겠습니다.
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .notfound {
+    display: grid;
+    gap: 1.1rem;
+    padding-bottom: 2rem;
+  }
+
+  .eyebrow {
+    margin: 0;
+    color: #2563eb;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .notfound h2 {
+    margin-top: 1.5rem;
+  }
+
+  .shortcut-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.85rem;
+    max-width: 900px;
+  }
+
+  .shortcut-grid a {
+    display: grid;
+    gap: 0.35rem;
+    border: 1px solid #d8e2f0;
+    border-radius: 8px;
+    background: #f8fbff;
+    padding: 1rem;
+    text-decoration: none;
+  }
+
+  .shortcut-grid strong {
+    color: #1d4ed8;
+    font-size: 1.02rem;
+  }
+
+  .shortcut-grid span {
+    color: #536174;
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  .recent-list {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0;
+    max-width: 900px;
+    padding-left: 1.15rem;
+  }
+
+  .recent-list li {
+    color: #6a7787;
+  }
+
+  .recent-list a {
+    font-weight: 800;
+  }
+
+  .recent-list small {
+    display: block;
+    color: #8593a5;
+    font-size: 0.82rem;
+  }
+
+  .help {
+    color: #4f6075;
+  }
+</style>

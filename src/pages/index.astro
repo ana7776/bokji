@@ -4,6 +4,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import CheckCard from "@/components/CheckCard.astro";
 import PostCard from "@/components/PostCard.astro";
 import { categoryPath, checkItems, uniqueCategories } from "@/lib/items";
+import { postPath } from "@/lib/info";
 import { reportSeries } from "@/lib/reportSeries";
 
 const posts = (await getCollection("info")).sort(
@@ -11,6 +12,11 @@ const posts = (await getCollection("info")).sort(
 );
 
 const categories = uniqueCategories();
+// 대표 글은 입문 / 실전 / 문제 해결 순으로 역할이 겹치지 않게 노출합니다.
+const roleOrder = ["입문", "실전", "문제 해결"];
+const featuredPosts = posts
+  .filter((post) => post.data.featured && post.data.featuredRole)
+  .sort((a, b) => roleOrder.indexOf(a.data.featuredRole!) - roleOrder.indexOf(b.data.featuredRole!));
 const featuredItems = [
   "monthly-salary-net-pay",
   "loan-interest",
@@ -98,6 +104,22 @@ const reports = reportSeries
             <span>{link.note}</span>
           </a>
         ))}
+      </section>
+
+      <section class="featured-panel" aria-labelledby="featured-title">
+        <div class="section-heading">
+          <p>대표 글</p>
+          <h2 id="featured-title">복지체크를 처음 본다면 이 세 편부터</h2>
+        </div>
+        <div class="featured-grid">
+          {featuredPosts.map((post) => (
+            <a href={postPath(post)}>
+              <span class="role">{post.data.featuredRole}</span>
+              <strong>{post.data.title}</strong>
+              <span class="note">{post.data.featuredNote}</span>
+            </a>
+          ))}
+        </div>
       </section>
 
       <section class="report-panel" aria-labelledby="report-title">
@@ -370,11 +392,56 @@ const reports = reportSeries
     padding: 1.15rem;
   }
 
-  .report-panel {
+  .report-panel,
+  .featured-panel {
     border: 1px solid #dce6f2;
     border-radius: 8px;
     background: #ffffff;
     padding: 1.15rem;
+  }
+
+  .featured-panel {
+    margin-bottom: 1.25rem;
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+
+  .featured-grid a {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+    border: 1px solid #d8e5f7;
+    border-radius: 8px;
+    background: #f8fbff;
+    padding: 1rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .featured-grid .role {
+    justify-self: start;
+    border-radius: 999px;
+    background: #1d4ed8;
+    padding: 0.16rem 0.6rem;
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 900;
+  }
+
+  .featured-grid strong {
+    color: #172033;
+    font-size: 1.02rem;
+    line-height: 1.45;
+  }
+
+  .featured-grid .note {
+    color: #536174;
+    font-size: 0.92rem;
+    line-height: 1.6;
   }
 
   .report-grid {
@@ -509,7 +576,8 @@ const reports = reportSeries
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .report-grid {
+    .report-grid,
+    .featured-grid {
       grid-template-columns: 1fr;
     }
   }
@@ -521,7 +589,8 @@ const reports = reportSeries
 
     .hero,
     .main-list,
-    .side-panel {
+    .side-panel,
+    .featured-panel {
       padding: 1rem;
     }
 

@@ -5,7 +5,7 @@ publishedAt: "2026-06-17"
 updatedAt: "2026-06-30"
 category: "신청준비"
 tags: ["청년", "주거비", "소득기준"]
-featured: true
+featured: false
 ---
 
 복지사업은 중앙정부 사업과 지자체 사업으로 나뉩니다. 같은 조건이어도 거주 지역에 따라 신청 가능 여부가 달라질 수 있습니다.
