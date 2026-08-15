@@ -40,6 +40,11 @@ Last checked: 2026-08-15
 - **4.4 Image hygiene.** `public/images/bokjicheck-reference.png` was a 1.3MB design mockup, unreferenced but publicly deployed, showing features the site does not have (로그인, 회원가입, 복지뉴스, 복지상담, 커뮤니티). Moved to `design/` so it is no longer served.
 - **8.3 Thin content.** Nine posts were under 800 Korean characters. All were expanded with substantive sections; the site now has zero posts under 800 characters and the median rose from 891 to 1146. Verified 0 broken internal links after adding roughly 30 new cross-links.
 
+### Resolved on 2026-08-15 (third pass, guide chapters 3.4 and 2.3)
+
+- **3.4 Internal linking.** 17 of the guide posts belonged to no report series, so they never rendered a "next reading" path and were reachable only through tag-matched related cards. Restructured into 7 series so that all 40 posts belong to exactly one path, verified programmatically (no duplicates, no missing slugs).
+- **Three more posts for measured search demand**, each targeting queries that had impressions but no dedicated page: `basic-pension-property-deduction-2026.md` (기초연금 기본재산액, the only query axis that has produced a click), `family-lease-housing-benefit.md` (1촌 직계혈족 임대차계약, position 6), and `freelancer-tax-settlement-guide.md` (the 3.3% cluster, ~32 impressions at positions 31-58). The freelancer post is deliberately written from the tax-settlement angle so it does not duplicate the existing welfare-income post or the calculator.
+
 ### Gaps to Keep Improving
 
 - Impressions collapsed from 55-77/day to 0-2/day after 2026-07-21, overlapping the Cloudflare Pages build-output problem fixed on 2026-08-07. Track recovery over the next few weeks before drawing content conclusions from the numbers.

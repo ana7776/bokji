@@ -84,6 +84,8 @@ featured: false
 | 예금·적금 등 금융재산 기준 | [복지 재산기준에서 예금과 적금 확인 방법](/info/financial-asset-standard/) |
 | 자동차 재산 처리 | [기초생활보장 자동차 재산 확인](/info/basic-livelihood-car-property-check/) |
 | 임차료 기준과 주거급여 | [2026 주거급여 기준임대료](/info/housing-benefit-standard-rent-2026/) |
+| 가족 명의 집에 살 때 | [부모님 집 월세와 주거급여](/info/family-lease-housing-benefit/) |
+| 기초연금의 재산 공제 | [2026 기초연금 기본재산액](/info/basic-pension-property-deduction-2026/) |
 | 전월세 대출 이자 확인 | [전세대출 이자 계산기](/check/housing/housing-cost/jeonse-loan-interest/) |
 
 주거용재산 한도액과 환산율은 보건복지부의 연도별 사업 안내와 고시로 정해지며 개정될 수 있습니다. 이 글은 신청 전 자료를 정리하기 위한 참고용이며, 실제 적용 금액과 최종 판단은 복지로와 주민센터의 최신 공식 기준으로 확인하세요.
