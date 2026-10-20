@@ -211,7 +211,7 @@ const detailJsonLd = [
           <span>{item.formula}</span>
         </li>
         <li>
-          <strong>예시 확인</strong>
+          <strong>입력·해석 요약</strong>
           <span>
             {exampleRows.length > 0
               ? exampleRows.map(([name, value]) => `${name}: ${value}`).join(" / ")
@@ -704,11 +704,11 @@ const detailJsonLd = [
         const householdValue = household?.value ?? "4";
         const median = medianIncome2026[householdValue] ?? medianIncome2026["4"];
         const recognizedIncome = numberFrom(benefitIncome);
-        const medicalIncome = numberFrom(benefitMedicalIncome) || recognizedIncome;
-        const livelihoodThreshold = Math.floor(median * 0.32);
-        const medicalThreshold = Math.floor(median * 0.4);
-        const housingThreshold = Math.floor(median * 0.48);
-        const educationThreshold = Math.floor(median * 0.5);
+        const medicalIncome = !benefitMedicalIncome || benefitMedicalIncome.value.trim() === "" ? recognizedIncome : numberFrom(benefitMedicalIncome);
+        const livelihoodThreshold = Math.round(median * 0.32);
+        const medicalThreshold = Math.round(median * 0.4);
+        const housingThreshold = Math.round(median * 0.48);
+        const educationThreshold = Math.round(median * 0.5);
         const singleParentThreshold = Math.floor(median * 0.65);
         const regionValue = benefitRegion?.value ?? "other";
         const housingType = benefitHousingType?.value ?? "rent";
@@ -716,8 +716,11 @@ const detailJsonLd = [
         const depositMonthly = Math.floor(numberFrom(benefitDeposit) * 10000 * 0.04 / 12);
         const actualRent = housingType === "own" ? 0 : housingType === "jeonse" ? depositMonthly : depositMonthly + numberFrom(benefitMonthlyRent);
         const housingDeduction = recognizedIncome > livelihoodThreshold ? Math.floor((recognizedIncome - livelihoodThreshold) * 0.3) : 0;
-        let housingBenefit = recognizedIncome <= housingThreshold && housingType !== "own" ? Math.max(0, Math.min(actualRent, standardRent) - housingDeduction) : 0;
-        if (housingBenefit > 0 && housingBenefit < 10000) housingBenefit = 10000;
+        const canEstimateRentalBenefit = recognizedIncome <= housingThreshold && housingType !== "own" && actualRent > 0;
+        const rentOverFiveTimes = canEstimateRentalBenefit && actualRent > standardRent * 5;
+        const housingBenefit = canEstimateRentalBenefit
+          ? (rentOverFiveTimes ? 10000 : Math.max(10000, Math.min(actualRent, standardRent) - housingDeduction))
+          : 0;
         const livelihoodBenefit = recognizedIncome <= livelihoodThreshold ? Math.max(0, livelihoodThreshold - recognizedIncome) : 0;
         const educationEligible = recognizedIncome <= educationThreshold && numberFrom(benefitStudents) > 0;
         const medicalEligible = medicalIncome <= medicalThreshold;
@@ -730,9 +733,9 @@ const detailJsonLd = [
         }
         if (thresholdTable) {
           const rows = [
-            ["생계급여", livelihoodThreshold, livelihoodBenefit > 0 ? `${formatter.format(livelihoodBenefit)}원 예상` : "기준 초과", "기준선과 차액 확인"],
+            ["생계급여", livelihoodThreshold, recognizedIncome <= livelihoodThreshold ? (livelihoodBenefit > 0 ? `${formatter.format(livelihoodBenefit)}원 예상` : "소득기준 이하·차액 0원") : "기준 초과", "기준선과 차액 확인"],
             ["의료급여", medicalThreshold, medicalEligible ? "기준 이하" : "기준 초과", "부양의무자 등 별도 기준 확인"],
-            ["주거급여", housingThreshold, housingType === "own" ? (recognizedIncome <= housingThreshold ? "자가가구 수선유지급여 검토" : "기준 초과") : housingBenefit > 0 ? `${formatter.format(housingBenefit)}원 간편 추정` : "기준 초과 또는 차감 후 0원", "임대차계약서와 실제임차료 확인"],
+            ["주거급여", housingThreshold, housingType === "own" ? (recognizedIncome <= housingThreshold ? "자가가구 수선유지급여 검토" : "기준 초과") : housingBenefit > 0 ? `${formatter.format(housingBenefit)}원 간편 추정` : "기준 초과 또는 차감 후 0원", rentOverFiveTimes ? "기준임대료 5배 초과: 최저지급액 예외 확인" : "임대차계약서와 실제임차료 확인"],
             ["교육급여", educationThreshold, educationEligible ? "학생 가구 기준 이하" : numberFrom(benefitStudents) > 0 ? "기준 초과" : "학생 수 미입력", "초·중·고 학생 여부 확인"],
             ["한부모가족 지원", singleParentThreshold, singleParentEligible ? "참고 기준 이하" : benefitSingleParent?.value === "yes" ? "참고 기준 초과" : "해당 없음", "연령·양육 조건 별도 확인"],
           ];

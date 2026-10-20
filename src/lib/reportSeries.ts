@@ -23,6 +23,7 @@ export const reportSeries = [
       "기준임대료, 가족 간 임대차계약, 실제 월세·전세대출 이자, 이사 초기비용을 함께 정리해 주거지원 판단 흐름을 만듭니다.",
     slugs: [
       "housing-benefit-standard-rent-2026",
+      "housing-benefit-notice-vs-simulation",
       "housing-benefit-cost-check",
       "family-lease-housing-benefit",
       "public-rental-income-standard-2026",
@@ -89,6 +90,7 @@ export const reportSeries = [
       "local-welfare-public-data-check",
       "local-welfare-search-guide",
       "welfare-documents-checklist",
+      "welfare-change-report-checklist",
     ],
   },
 ];

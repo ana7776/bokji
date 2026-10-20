@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import CheckCard from "@/components/CheckCard.astro";
-import { checkItems } from "@/lib/items";
+import { absoluteUrl, checkItems } from "@/lib/items";
 
 export function getStaticPaths() {
   const categories = [...new Set(checkItems.map((item) => item.category))];
@@ -11,15 +11,41 @@ export function getStaticPaths() {
 const { category } = Astro.params;
 const items = checkItems.filter((item) => item.category === category);
 const label = items[0]?.categoryLabel ?? "복지";
+const categoryIntro = category === "asset"
+  ? "예금·적금의 이자와 만기 금액을 비교하는 도구입니다. 이자 계산 결과만으로 복지 재산기준이나 수급 자격을 판정할 수는 없습니다."
+  : `${label} 분류의 계산 도구를 모았습니다. 필요한 도구의 입력 기준과 한계를 먼저 확인하세요.`;
+const categoryBreadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "홈", item: absoluteUrl("/") },
+    { "@type": "ListItem", position: 2, name: "전체 체크도구", item: absoluteUrl("/check/") },
+    { "@type": "ListItem", position: 3, name: label, item: absoluteUrl(`/check/${category}/`) },
+  ],
+};
 ---
 
 <BaseLayout
   title={`${label} 복지 체크도구 | 복지체크`}
-  description={`${label} 기준으로 복지 신청 전 확인할 수 있는 계산기와 정보 도구를 모았습니다.`}
+  description={categoryIntro}
   canonicalPath={`/check/${category}/`}
+  jsonLd={categoryBreadcrumb}
 >
+  <nav class="category-breadcrumb" aria-label="현재 위치">
+    <a href="/">홈</a><span aria-hidden="true">›</span><a href="/check/">전체 체크도구</a><span aria-hidden="true">›</span><span aria-current="page">{label}</span>
+  </nav>
   <h1>{label} 복지 체크도구</h1>
-  <p class="lead">{label}와 관련된 소득, 재산, 생활비 항목을 신청 전에 확인하세요.</p>
+  <p class="lead">{categoryIntro}</p>
+  {category === "asset" && (
+    <section class="section" aria-labelledby="asset-scope-title">
+      <h2 id="asset-scope-title">이자 계산과 복지 재산조사는 다릅니다</h2>
+      <p>예금 이자는 원금·기간·금리로 계산하지만, 복지 심사에서는 통장 원금과 이자소득의 반영, 가구별 재산·부채·공제 등을 별도로 확인합니다. 아래 도구는 금융상품 금액을 정리하는 참고용입니다.</p>
+      <ul>
+        <li>예금·적금 원금이 어떻게 조사되는지 궁금하면 <a href="/info/financial-asset-standard/">복지 금융재산 확인 안내</a>를 보세요.</li>
+        <li>재산이 월 소득으로 환산되는 구조는 <a href="/info/basic-livelihood-income-recognition/">기초생활보장 소득인정액 안내</a>에서 확인하세요.</li>
+      </ul>
+    </section>
+  )}
   <section class="section" aria-labelledby="category-tools-title">
     <h2 id="category-tools-title">{label} 전체 체크도구</h2>
     <div class="grid">
@@ -27,3 +53,8 @@ const label = items[0]?.categoryLabel ?? "복지";
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .category-breadcrumb { justify-content: flex-start; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.9rem; }
+  .category-breadcrumb a { font-size: inherit; }
+</style>

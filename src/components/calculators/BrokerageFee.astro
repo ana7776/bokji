@@ -1,6 +1,6 @@
 <section class="section bkc" id="c-bf">
   <h2>부동산 중개수수료 계산</h2>
-  <p class="bkc-basis">주택 기준 법정 상한요율 · 실제 요율은 상한 내에서 중개사와 협의</p>
+  <p class="bkc-basis">서울시 주택 중개보수 요율표 기준 상한 참고 · 실제 요율은 상한 내에서 협의하고 소재지 조례 확인</p>
   <div class="bkc-grid">
     <label>거래 유형
       <select id="bf-type"><option value="sale" selected>매매·교환</option><option value="lease">전세·월세(임대차)</option></select>
@@ -11,6 +11,7 @@
   <output id="bf-result" aria-live="polite">입력값을 기준으로 수수료 상한을 표시합니다.</output>
   <div class="bkc-table" id="bf-table"></div>
   <p class="bkc-note">월세 거래금액은 '보증금 + 월세 × 100'으로 환산하되, 그 값이 5,000만 원 미만이면 '보증금 + 월세 × 70'을 적용합니다. 표시 금액은 법정 상한이며 부가가치세(일반과세 중개사 10%)는 별도입니다. 오피스텔(주거용, 요율 별도)과 상가는 기준이 다릅니다.</p>
+  <p><a href="https://land.seoul.go.kr/land/broker/brokerageCommission.do" rel="noopener noreferrer">서울특별시 부동산 중개보수 요율표</a> · 자료 확인 2026-10-19</p>
   <p class="bkc-warning">본 계산기는 실제 심사 결과와 다를 수 있습니다.</p>
 </section>
 <script>
@@ -27,8 +28,8 @@
       [1_200_000_000, 0.005, null], [1_500_000_000, 0.006, null], [Infinity, 0.007, null],
     ];
     const LEASE: Array<[number, number, number | null]> = [
-      [50_000_000, 0.005, 200_000], [100_000_000, 0.004, 300_000], [1_200_000_000, 0.003, null],
-      [1_500_000_000, 0.004, null], [Infinity, 0.006, null],
+      [50_000_000, 0.005, 200_000], [100_000_000, 0.004, 300_000], [600_000_000, 0.003, null],
+      [1_200_000_000, 0.004, null], [1_500_000_000, 0.005, null], [Infinity, 0.006, null],
     ];
     const render = () => {
       if (!result || !table) return;
